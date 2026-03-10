@@ -1,0 +1,1 @@
+/Users/user/www/_devshop/test/AGENTS.md
