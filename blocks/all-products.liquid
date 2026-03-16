@@ -20,13 +20,6 @@
     --sort-border-radius: {{ block.settings.sort_border_radius }}px;
     --sort-bg-color: {{ block.settings.sort_bg_color }};
     --sort-border-color: {{ block.settings.sort_border_color }};
-    --card-info-direction: {{ block.settings.card_info_layout }};
-    --card-info-justify: {{ block.settings.card_info_justify }};
-    --card-info-align: {{ block.settings.card_info_align }};
-    --card-title-size: {{ block.settings.card_title_font_size }}px;
-    --card-title-weight: {% if block.settings.card_title_bold %}bold{% else %}normal{% endif %};
-    --card-price-size: {{ block.settings.card_price_font_size }}px;
-    --card-price-weight: {% if block.settings.card_price_bold %}bold{% else %}normal{% endif %};
   }
 
   .all-products__grid-{{ id }} {
@@ -80,27 +73,10 @@
           <div class="all-products__card"
                data-price="{{ product.price }}"
                data-name="{{ product.title | downcase | escape }}">
-            <a href="{{ product.url }}" class="all-products__card-link">
-              <div class="all-products__card-image">
-                {% if product.featured_image %}
-                  {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: product.featured_image.alt }}
-                {% else %}
-                  {{ 'product-1' | placeholder_svg_tag }}
-                {% endif %}
-              </div>
-              <div class="all-products__card-info">
-                <p class="all-products__card-title">{{ product.title }}</p>
-                <p class="all-products__card-price">
-                  {%- if block.settings.price_format == 'money_without_currency' -%}
-                    {{- product.price | money_without_currency -}}
-                  {%- elsif block.settings.price_format == 'money_without_trailing_zeros' -%}
-                    {{- product.price | money_without_trailing_zeros -}}
-                  {%- else -%}
-                    {{- product.price | money -}}
-                  {%- endif -%}
-                </p>
-              </div>
-            </a>
+            {%- capture card_blocks -%}
+              {%- content_for 'blocks', closest.product: product -%}
+            {%- endcapture -%}
+            {{ card_blocks }}
           </div>
         {% endfor %}
       {% else %}
@@ -141,54 +117,9 @@
     display: grid;
   }
 
-  .all-products__card-link {
+  .all-products__card {
     display: flex;
     flex-direction: column;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .all-products__card-image {
-    width: 100%;
-    aspect-ratio: 1;
-    overflow: hidden;
-  }
-
-  .all-products__card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .all-products__card-image svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  .all-products__card-info {
-    padding-block: 8px;
-    display: flex;
-    flex-direction: var(--card-info-direction);
-    justify-content: var(--card-info-justify);
-    align-items: var(--card-info-align);
-    gap: 4px;
-  }
-
-  .all-products__card-title,
-  .all-products__card-price {
-    margin: 0;
-  }
-
-  .all-products__card-title {
-    font-size: var(--card-title-size);
-    font-weight: var(--card-title-weight);
-  }
-
-  .all-products__card-price {
-    font-size: var(--card-price-size);
-    font-weight: var(--card-price-weight);
   }
 
   .all-products__empty {
@@ -239,6 +170,13 @@
 {% schema %}
 {
   "name": "t:names.all_products",
+  "blocks": [
+    { "type": "_product-card-gallery" },
+    { "type": "product-title" },
+    { "type": "price" },
+    { "type": "text" },
+    { "type": "@app" }
+  ],
   "settings": [
     {
       "type": "header",
@@ -331,86 +269,6 @@
     },
     {
       "type": "header",
-      "content": "t:content.product_card"
-    },
-    {
-      "type": "select",
-      "id": "card_info_layout",
-      "label": "t:settings.direction",
-      "options": [
-        { "value": "column", "label": "t:options.vertical" },
-        { "value": "row", "label": "t:options.horizontal" }
-      ],
-      "default": "column"
-    },
-    {
-      "type": "select",
-      "id": "card_info_justify",
-      "label": "t:settings.justify",
-      "options": [
-        { "value": "flex-start", "label": "t:options.left" },
-        { "value": "center", "label": "t:options.center" },
-        { "value": "flex-end", "label": "t:options.right" },
-        { "value": "space-between", "label": "t:options.space_between" }
-      ],
-      "default": "flex-start"
-    },
-    {
-      "type": "select",
-      "id": "card_info_align",
-      "label": "t:settings.alignment",
-      "options": [
-        { "value": "flex-start", "label": "t:options.top" },
-        { "value": "center", "label": "t:options.center" },
-        { "value": "flex-end", "label": "t:options.bottom" }
-      ],
-      "default": "flex-start"
-    },
-    {
-      "type": "range",
-      "id": "card_title_font_size",
-      "label": "t:settings.title_font_size",
-      "min": 10,
-      "max": 32,
-      "step": 1,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "checkbox",
-      "id": "card_title_bold",
-      "label": "t:settings.bold",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "card_price_font_size",
-      "label": "t:settings.price_font_size",
-      "min": 10,
-      "max": 24,
-      "step": 1,
-      "unit": "px",
-      "default": 14
-    },
-    {
-      "type": "checkbox",
-      "id": "card_price_bold",
-      "label": "t:settings.bold",
-      "default": false
-    },
-    {
-      "type": "select",
-      "id": "price_format",
-      "label": "t:settings.price_format",
-      "options": [
-        { "value": "money", "label": "t:options.price_with_currency" },
-        { "value": "money_without_currency", "label": "t:options.price_without_currency" },
-        { "value": "money_without_trailing_zeros", "label": "t:options.price_no_trailing_zeros" }
-      ],
-      "default": "money"
-    },
-    {
-      "type": "header",
       "content": "t:content.grid"
     },
     {
@@ -500,7 +358,13 @@
   "presets": [
     {
       "name": "t:names.all_products",
-      "category": "t:categories.products"
+      "category": "t:categories.products",
+      "blocks": {
+        "gallery": { "type": "_product-card-gallery" },
+        "title":   { "type": "product-title" },
+        "price":   { "type": "price" }
+      },
+      "block_order": ["gallery", "title", "price"]
     }
   ]
 }
