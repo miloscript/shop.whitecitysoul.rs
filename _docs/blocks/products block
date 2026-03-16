@@ -1,0 +1,70 @@
+# All Products Block
+
+## Purpose
+
+Renders all products from a selected collection in a client-side sortable CSS grid. Designed for small catalogs (~10 products). No pagination. Sorting is done entirely in JavaScript — no page reload.
+
+## Usage
+
+Must be placed inside a section that accepts `@theme` blocks (i.e. the section schema includes `{ "type": "@theme" }` in its `blocks` array).
+
+```liquid
+{% content_for 'block', type: 'all_products', id: 'all-products' %}
+```
+
+---
+
+## Available Settings
+
+### Content
+
+| ID | Type | Description |
+|---|---|---|
+| `collection` | collection | The collection whose products are displayed |
+
+### Sorting
+
+| ID | Type | Description | Default |
+|---|---|---|---|
+| `default_sort` | select | Which sort is active on load | `price-asc` |
+| `show_sort_price_asc` | checkbox | Show "price low to high" option | true |
+| `show_sort_price_desc` | checkbox | Show "price high to low" option | true |
+| `show_sort_name_asc` | checkbox | Show "name A to Z" option | true |
+| `show_sort_name_desc` | checkbox | Show "name Z to A" option | true |
+| `sort_position` | select | Dropdown alignment — Left or Right | Left |
+| `sort_font_size` | range (10–24px) | Dropdown font size | 14px |
+| `sort_border_radius` | range (0–20px) | Dropdown corner radius | 0px |
+| `sort_bg_color` | color | Dropdown background color | — |
+
+The sort dropdown is hidden entirely when all four sort checkboxes are unchecked.
+
+### Product card
+
+| ID | Type | Description | Default |
+|---|---|---|---|
+| `card_info_layout` | select | Info area direction — Vertical (stacked) or Horizontal (side-by-side) | Vertical |
+| `card_title_font_size` | range (10–32px) | Product title font size | 16px |
+| `card_price_font_size` | range (10–24px) | Product price font size | 14px |
+
+### Grid
+
+| ID | Type | Description | Default |
+|---|---|---|---|
+| `columns` | range (1–8) | Number of desktop columns | 4 |
+| `mobile_columns` | select (1 or 2) | Number of mobile columns | 2 |
+| `columns_gap` | range (0–100px) | Horizontal gap between cards | 8px |
+| `rows_gap` | range (0–100px) | Vertical gap between cards | 8px |
+
+### Section layout
+
+| ID | Type | Description | Default |
+|---|---|---|---|
+| `section_width` | select | Page-width or full-width | page-width |
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
+
+### Padding
+
+| ID | Type | Description | Default |
+|---|---|---|---|
+| `padding-block-start` | range (0–100px) | Top padding | 48px |
+| `padding-block-end` | range (0–100px) | Bottom padding | 48px |

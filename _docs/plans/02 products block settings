@@ -1,0 +1,75 @@
+# Plan: All Products Block — Additional Settings
+
+## Context
+
+The `blocks/all-products.liquid` block was built with fixed CSS values for sort dropdown appearance and product card layout. This adds merchant-controllable settings for: sort dropdown position (left/right), sort dropdown font size / border radius / background color, and product card info layout direction plus individual font sizes for title and price.
+
+## Files Modified
+
+- `blocks/all-products.liquid`
+- `locales/en.default.schema.json`
+
+---
+
+## Changes to `blocks/all-products.liquid`
+
+### 1. `{% style %}` — CSS variables added to `.all-products-{{ id }}`
+
+```css
+--sort-justify: {{ block.settings.sort_position }};
+--sort-font-size: {{ block.settings.sort_font_size }}px;
+--sort-border-radius: {{ block.settings.sort_border_radius }}px;
+--sort-bg-color: {{ block.settings.sort_bg_color }};
+--card-info-direction: {{ block.settings.card_info_layout }};
+--card-title-size: {{ block.settings.card_title_font_size }}px;
+--card-price-size: {{ block.settings.card_price_font_size }}px;
+```
+
+### 2. `{% stylesheet %}` — static values replaced with CSS variables
+
+| Selector | Property | Was | Now |
+|---|---|---|---|
+| `.all-products__sort` | `display` / `justify-content` | missing | `flex` / `var(--sort-justify)` |
+| `.all-products__sort-select` | `font-size` | `0.875rem` | `var(--sort-font-size)` |
+| `.all-products__sort-select` | `border-radius` | missing | `var(--sort-border-radius)` |
+| `.all-products__sort-select` | `background-color` | `transparent` | `var(--sort-bg-color)` |
+| `.all-products__card-info` | `flex-direction` | `column` | `var(--card-info-direction)` |
+| `.all-products__card-title` | `font-size` | `1rem` | `var(--card-title-size)` |
+| `.all-products__card-price` | `font-size` | `0.875rem` | `var(--card-price-size)` |
+
+### 3. `{% schema %}` — new settings added
+
+**Sorting section** (after existing checkboxes):
+
+| Setting ID | Type | Label | Default |
+|---|---|---|---|
+| `sort_position` | select | Position | `"flex-start"` (Left) |
+| `sort_font_size` | range 10–24px | Font size | `14` |
+| `sort_border_radius` | range 0–20px | Corner radius | `0` |
+| `sort_bg_color` | color | Background color | — |
+
+**New "Product card" section** (between Sorting and Grid):
+
+| Setting ID | Type | Label | Default |
+|---|---|---|---|
+| `card_info_layout` | select | Direction | `"column"` (Vertical) |
+| `card_title_font_size` | range 10–32px | Title size | `16` |
+| `card_price_font_size` | range 10–24px | Price size | `14` |
+
+---
+
+## Changes to `locales/en.default.schema.json`
+
+New keys added to `settings`:
+
+| Key | Value |
+|---|---|
+| `font_size` | `"Font size"` |
+| `title_font_size` | `"Title size"` |
+| `price_font_size` | `"Price size"` |
+
+`content.product_card` already existed.
+
+## Status
+
+Completed. Both files pass Shopify Theme Check validation.

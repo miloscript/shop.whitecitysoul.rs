@@ -15,6 +15,13 @@
   .all-products-{{ id }} {
     padding-block-start: {{ block.settings['padding-block-start'] }}px;
     padding-block-end: {{ block.settings['padding-block-end'] }}px;
+    --sort-justify: {{ block.settings.sort_position }};
+    --sort-font-size: {{ block.settings.sort_font_size }}px;
+    --sort-border-radius: {{ block.settings.sort_border_radius }}px;
+    --sort-bg-color: {{ block.settings.sort_bg_color }};
+    --card-info-direction: {{ block.settings.card_info_layout }};
+    --card-title-size: {{ block.settings.card_title_font_size }}px;
+    --card-price-size: {{ block.settings.card_price_font_size }}px;
   }
 
   .all-products__grid-{{ id }} {
@@ -98,15 +105,18 @@
 
 {% stylesheet %}
   .all-products__sort {
+    display: flex;
+    justify-content: var(--sort-justify);
     margin-block-end: 16px;
   }
 
   .all-products__sort-select {
     padding: 6px 32px 6px 12px;
     border: 1px solid;
-    background: transparent;
+    background-color: var(--sort-bg-color);
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: var(--sort-font-size);
+    border-radius: var(--sort-border-radius);
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='currentColor' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -147,7 +157,7 @@
   .all-products__card-info {
     padding-block: 8px;
     display: flex;
-    flex-direction: column;
+    flex-direction: var(--card-info-direction);
     gap: 4px;
   }
 
@@ -157,11 +167,11 @@
   }
 
   .all-products__card-title {
-    font-size: 1rem;
+    font-size: var(--card-title-size);
   }
 
   .all-products__card-price {
-    font-size: 0.875rem;
+    font-size: var(--card-price-size);
   }
 
   .all-products__empty {
@@ -261,6 +271,75 @@
       "id": "show_sort_name_desc",
       "label": "t:settings.show_sort_name_desc",
       "default": true
+    },
+    {
+      "type": "select",
+      "id": "sort_position",
+      "label": "t:settings.position",
+      "options": [
+        { "value": "flex-start", "label": "t:options.left" },
+        { "value": "flex-end", "label": "t:options.right" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "range",
+      "id": "sort_font_size",
+      "label": "t:settings.font_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "sort_border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "sort_bg_color",
+      "label": "t:settings.background_color"
+    },
+    {
+      "type": "header",
+      "content": "t:content.product_card"
+    },
+    {
+      "type": "select",
+      "id": "card_info_layout",
+      "label": "t:settings.direction",
+      "options": [
+        { "value": "column", "label": "t:options.vertical" },
+        { "value": "row", "label": "t:options.horizontal" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "range",
+      "id": "card_title_font_size",
+      "label": "t:settings.title_font_size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_price_font_size",
+      "label": "t:settings.price_font_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
     },
     {
       "type": "header",
