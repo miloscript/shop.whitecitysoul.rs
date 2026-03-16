@@ -8,7 +8,6 @@
 
 {% liquid
   assign id = block.id | replace: '_', '' | downcase
-  assign section_width = block.settings.section_width
 %}
 
 {% style %}
@@ -20,6 +19,9 @@
     --sort-border-radius: {{ block.settings.sort_border_radius }}px;
     --sort-bg-color: {{ block.settings.sort_bg_color }};
     --sort-border-color: {{ block.settings.sort_border_color }};
+    {% if block.settings.section_width == 'full-width' %}
+    grid-column: 1 / -1;
+    {% endif %}
   }
 
   .all-products__grid-{{ id }} {
@@ -37,7 +39,7 @@
 
 <all-products-{{ id }}
   data-default-sort="{{ block.settings.default_sort }}"
-  class="all-products-{{ id }} color-{{ block.settings.color_scheme }} {{ section_width }}"
+  class="all-products-{{ id }} color-{{ block.settings.color_scheme }}"
   {{ block.shopify_attributes }}
 >
   {%- liquid
@@ -172,6 +174,7 @@
   "name": "t:names.all_products",
   "blocks": [
     { "type": "_product-card-gallery" },
+    { "type": "_product-card-group" },
     { "type": "product-title" },
     { "type": "price" },
     { "type": "text" },
@@ -361,10 +364,25 @@
       "category": "t:categories.products",
       "blocks": {
         "gallery": { "type": "_product-card-gallery" },
-        "title":   { "type": "product-title" },
-        "price":   { "type": "price" }
+        "info": {
+          "type": "_product-card-group",
+          "settings": {
+            "content_direction": "row",
+            "horizontal_alignment": "space-between",
+            "vertical_alignment": "center",
+            "gap": 8
+          },
+          "blocks": {
+            "title": { "type": "product-title" },
+            "price": {
+              "type": "price",
+              "settings": { "width": "fit-content" }
+            }
+          },
+          "block_order": ["title", "price"]
+        }
       },
-      "block_order": ["gallery", "title", "price"]
+      "block_order": ["gallery", "info"]
     }
   ]
 }
