@@ -19,9 +19,14 @@
     --sort-font-size: {{ block.settings.sort_font_size }}px;
     --sort-border-radius: {{ block.settings.sort_border_radius }}px;
     --sort-bg-color: {{ block.settings.sort_bg_color }};
+    --sort-border-color: {{ block.settings.sort_border_color }};
     --card-info-direction: {{ block.settings.card_info_layout }};
+    --card-info-justify: {{ block.settings.card_info_justify }};
+    --card-info-align: {{ block.settings.card_info_align }};
     --card-title-size: {{ block.settings.card_title_font_size }}px;
+    --card-title-weight: {% if block.settings.card_title_bold %}bold{% else %}normal{% endif %};
     --card-price-size: {{ block.settings.card_price_font_size }}px;
+    --card-price-weight: {% if block.settings.card_price_bold %}bold{% else %}normal{% endif %};
   }
 
   .all-products__grid-{{ id }} {
@@ -85,7 +90,15 @@
               </div>
               <div class="all-products__card-info">
                 <p class="all-products__card-title">{{ product.title }}</p>
-                <p class="all-products__card-price">{{ product.price | money }}</p>
+                <p class="all-products__card-price">
+                  {%- if block.settings.price_format == 'money_without_currency' -%}
+                    {{- product.price | money_without_currency -}}
+                  {%- elsif block.settings.price_format == 'money_without_trailing_zeros' -%}
+                    {{- product.price | money_without_trailing_zeros -}}
+                  {%- else -%}
+                    {{- product.price | money -}}
+                  {%- endif -%}
+                </p>
               </div>
             </a>
           </div>
@@ -112,7 +125,7 @@
 
   .all-products__sort-select {
     padding: 6px 32px 6px 12px;
-    border: 1px solid;
+    border: 1px solid var(--sort-border-color);
     background-color: var(--sort-bg-color);
     cursor: pointer;
     font-size: var(--sort-font-size);
@@ -158,6 +171,8 @@
     padding-block: 8px;
     display: flex;
     flex-direction: var(--card-info-direction);
+    justify-content: var(--card-info-justify);
+    align-items: var(--card-info-align);
     gap: 4px;
   }
 
@@ -168,10 +183,12 @@
 
   .all-products__card-title {
     font-size: var(--card-title-size);
+    font-weight: var(--card-title-weight);
   }
 
   .all-products__card-price {
     font-size: var(--card-price-size);
+    font-weight: var(--card-price-weight);
   }
 
   .all-products__empty {
@@ -308,6 +325,11 @@
       "label": "t:settings.background_color"
     },
     {
+      "type": "color",
+      "id": "sort_border_color",
+      "label": "t:settings.border_color"
+    },
+    {
       "type": "header",
       "content": "t:content.product_card"
     },
@@ -322,6 +344,29 @@
       "default": "column"
     },
     {
+      "type": "select",
+      "id": "card_info_justify",
+      "label": "t:settings.justify",
+      "options": [
+        { "value": "flex-start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.right" },
+        { "value": "space-between", "label": "t:options.space_between" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "card_info_align",
+      "label": "t:settings.alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.top" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.bottom" }
+      ],
+      "default": "flex-start"
+    },
+    {
       "type": "range",
       "id": "card_title_font_size",
       "label": "t:settings.title_font_size",
@@ -332,6 +377,12 @@
       "default": 16
     },
     {
+      "type": "checkbox",
+      "id": "card_title_bold",
+      "label": "t:settings.bold",
+      "default": false
+    },
+    {
       "type": "range",
       "id": "card_price_font_size",
       "label": "t:settings.price_font_size",
@@ -340,6 +391,23 @@
       "step": 1,
       "unit": "px",
       "default": 14
+    },
+    {
+      "type": "checkbox",
+      "id": "card_price_bold",
+      "label": "t:settings.bold",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "price_format",
+      "label": "t:settings.price_format",
+      "options": [
+        { "value": "money", "label": "t:options.price_with_currency" },
+        { "value": "money_without_currency", "label": "t:options.price_without_currency" },
+        { "value": "money_without_trailing_zeros", "label": "t:options.price_no_trailing_zeros" }
+      ],
+      "default": "money"
     },
     {
       "type": "header",
