@@ -19,9 +19,6 @@
     --sort-border-radius: {{ block.settings.sort_border_radius }}px;
     --sort-bg-color: {{ block.settings.sort_bg_color }};
     --sort-border-color: {{ block.settings.sort_border_color }};
-    {% if block.settings.section_width == 'full-width' %}
-    grid-column: 1 / -1;
-    {% endif %}
   }
 
   .all-products__grid-{{ id }} {
@@ -39,7 +36,7 @@
 
 <all-products-{{ id }}
   data-default-sort="{{ block.settings.default_sort }}"
-  class="all-products-{{ id }} color-{{ block.settings.color_scheme }}"
+  class="all-products-block all-products-{{ id }} color-{{ block.settings.color_scheme }}"
   {{ block.shopify_attributes }}
 >
   {%- liquid
@@ -72,9 +69,11 @@
     {% if block.settings.collection != blank %}
       {% if block.settings.collection.products_count > 0 %}
         {% for product in block.settings.collection.products %}
-          <div class="all-products__card"
-               data-price="{{ product.price }}"
-               data-name="{{ product.title | downcase | escape }}">
+          <div
+            class="all-products__card"
+            data-price="{{ product.price }}"
+            data-name="{{ product.title | downcase | escape }}"
+          >
             {%- capture card_blocks -%}
               {%- content_for 'blocks', closest.product: product -%}
             {%- endcapture -%}
@@ -95,6 +94,14 @@
 </all-products-{{ id }}>
 
 {% stylesheet %}
+  .shopify-block:has(> .all-products-block) {
+    align-self: stretch;
+  }
+
+  .all-products-block {
+    display: block;
+  }
+
   .all-products__sort {
     display: flex;
     justify-content: var(--sort-justify);
