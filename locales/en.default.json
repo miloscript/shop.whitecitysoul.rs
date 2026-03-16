@@ -128,7 +128,17 @@
     "load_video": "Load video: {{ description }}",
     "sold_out": "Sold out",
     "payment_methods": "Payment methods",
-    "slider_label": "Slider"
+    "slider_label": "Slider",
+    "all_products": {
+      "sort": {
+        "price_asc": "Price: low to high",
+        "price_desc": "Price: high to low",
+        "name_asc": "Name: A to Z",
+        "name_desc": "Name: Z to A"
+      },
+      "no_products": "No products found",
+      "select_collection": "Select a collection to display products."
+    }
   },
   "blogs": {
     "article": {

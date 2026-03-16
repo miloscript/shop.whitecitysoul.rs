@@ -1,0 +1,139 @@
+# Plan: All Products Block
+
+## Context
+
+Implementing the "All products" block per the spec in `_docs/specs/01 products block`. This is a new reusable theme block that displays all products from a merchant-selected collection in a client-side sortable CSS grid. Designed for small catalogs (~10 products), with no pagination needed.
+
+## Files to Create
+
+- `blocks/all-products.liquid` — the new block
+
+## Files to Modify
+
+- `locales/en.default.json` — add sort button labels and empty state messages
+- `locales/en.default.schema.json` — add block name, setting labels, and sort option strings
+
+---
+
+## Block Design
+
+### HTML structure
+
+Use a scoped custom element wrapper for JavaScript attachment:
+
+```html
+<all-products-{id}
+  data-default-sort="{{ block.settings.default_sort }}"
+  class="all-products-{id} color-{{ block.settings.color_scheme }} {{ section_width }}"
+  {{ block.shopify_attributes }}
+>
+  <!-- Sort buttons (conditionally rendered) -->
+  <div class="all-products__sort">
+    <button class="all-products__sort-btn" data-sort="price-asc">...</button>
+    ...
+  </div>
+
+  <!-- Product grid -->
+  <div class="all-products__grid all-products__grid-{id}" data-all-products-grid>
+    <!-- For each product -->
+    <div class="all-products__card"
+         data-price="{{ product.price }}"
+         data-name="{{ product.title | downcase | escape }}">
+      <a href="{{ product.url }}" class="all-products__card-link">...</a>
+      <!-- image, title, price -->
+    </div>
+  </div>
+</all-products-{id}>
+```
+
+Use `{% assign id = block.id | replace: '_', '' | downcase %}` for scoped IDs.
+
+### CSS strategy
+
+- `{% style %}` — dynamic CSS using Liquid (grid columns, gaps, padding-block). Scoped to `.all-products__grid-{id}` and `.all-products-{id}`.
+- `{% stylesheet %}` — static CSS for sort buttons, card layout, image, title, price. No Liquid.
+
+### JavaScript
+
+Use `<script>` (not `{% javascript %}`) since Liquid interpolation is needed for the custom element name and default sort value.
+
+**Custom element `AllProducts{id}`:**
+- On `connectedCallback`: cache product elements (price from `data-price`, name from `data-name`), bind sort button click listeners, apply `data-default-sort` immediately.
+- `sort(key)`: re-append product elements in sorted order; toggle `.is-active` on buttons.
+
+### Product card rendering
+
+Inline rendering (not via `snippets/product-card.liquid`, which requires a full block context with per-card settings). Cards use simple CSS classes scoped to the block.
+
+---
+
+## Schema Settings
+
+### Headers and settings (in order)
+
+| Section header | Setting ID | Type | Default |
+|---|---|---|---|
+| `t:content.content` | `collection` | collection | — |
+| `t:content.sorting` | `default_sort` | select | `"price-asc"` |
+| | `show_sort_price_asc` | checkbox | `true` |
+| | `show_sort_price_desc` | checkbox | `true` |
+| | `show_sort_name_asc` | checkbox | `true` |
+| | `show_sort_name_desc` | checkbox | `true` |
+| `t:content.grid` | `columns` | range 1–8 | `4` |
+| | `mobile_columns` | select `"1"\|"2"` | `"2"` |
+| | `columns_gap` | range 0–100px | `8` |
+| | `rows_gap` | range 0–100px | `8` |
+| `t:content.section_layout` | `section_width` | select | `"page-width"` |
+| | `color_scheme` | color_scheme | `"scheme-1"` |
+| `t:content.padding` | `padding-block-start` | range 0–100px | `48` |
+| | `padding-block-end` | range 0–100px | `48` |
+
+Labels for `columns_gap` and `rows_gap` use existing keys `t:settings.horizontal_gap` / `t:settings.vertical_gap`.
+
+Section width options: `t:options.page` / `t:options.full`.
+
+---
+
+## New Translation Keys
+
+### `locales/en.default.json` — added under `"blocks"`:
+
+```json
+"all_products": {
+  "sort": {
+    "price_asc": "Price: low to high",
+    "price_desc": "Price: high to low",
+    "name_asc": "Name: A to Z",
+    "name_desc": "Name: Z to A"
+  },
+  "no_products": "No products found",
+  "select_collection": "Select a collection to display products."
+}
+```
+
+### `locales/en.default.schema.json` — added:
+
+- `names.all_products` = `"All products"`
+- `content.sorting` = `"Sorting"`
+- `settings.default_sort` = `"Default sort"`
+- `settings.show_sort_price_asc` = `"Show: price low to high"`
+- `settings.show_sort_price_desc` = `"Show: price high to low"`
+- `settings.show_sort_name_asc` = `"Show: name A to Z"`
+- `settings.show_sort_name_desc` = `"Show: name Z to A"`
+- `options.sort_price_asc` = `"Price: low to high"`
+- `options.sort_price_desc` = `"Price: high to low"`
+- `options.sort_name_asc` = `"Name: A to Z"`
+- `options.sort_name_desc` = `"Name: Z to A"`
+
+---
+
+## Reused Patterns
+
+- Scoped ID generation: `block.id | replace: '_', '' | downcase` — from `blocks/ai_gen_block_8eef269.liquid`
+- `{% style %}` for block-scoped dynamic CSS — same pattern
+- `color-{{ block.settings.color_scheme }}` class — from `snippets/product-card.liquid`
+- `{{ section_width }}` class value (`page-width` / `full-width`) — from `sections/custom-liquid.liquid`
+- `block.shopify_attributes` — standard across all blocks
+- `t:options.page` / `t:options.full` for section_width options — from `sections/custom-liquid.liquid`
+- `t:content.grid`, `t:content.section_layout`, `t:content.content`, `t:content.padding` — existing header keys
+- `t:settings.columns`, `t:settings.mobile_columns`, `t:settings.color_scheme`, `t:settings.section_width`, `t:settings.top`, `t:settings.bottom` — existing schema locale keys

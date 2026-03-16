@@ -1,0 +1,58 @@
+# All products block
+
+A reusable theme block that displays all products from a merchant-selected collection in a sortable grid. Designed for small catalogs (~10 products max), with no pagination or infinite scroll needed.
+
+## Product source
+
+- Merchant selects a **collection** as the product source via the theme editor
+- Renders using the **existing product card** block from the theme (to be adjusted separately later)
+
+## Sorting
+
+- Client-side sorting with **no page reload**
+- Sort options displayed at the top of the block
+- Each sort option can be individually **toggled on/off** in the theme editor
+- Merchant can set the **default sort option**
+
+### Available sort options
+
+| Option | Direction   |
+| ------ | ----------- |
+| Price  | Low to high |
+| Price  | High to low |
+| Name   | A to Z      |
+| Name   | Z to A      |
+
+## Grid layout
+
+- Products displayed in a **CSS grid**
+- Defaults: **4 columns** desktop, **2 columns** mobile
+- Column and row gaps are configurable
+
+## Theme editor settings
+
+### Content
+
+- `collection` — collection picker (product source)
+
+### Sorting
+
+- `default_sort` — select (default sort option shown on load)
+- `show_sort_price_asc` — checkbox (show "Price: low to high", default: true)
+- `show_sort_price_desc` — checkbox (show "Price: high to low", default: true)
+- `show_sort_name_asc` — checkbox (show "Name: A to Z", default: true)
+- `show_sort_name_desc` — checkbox (show "Name: Z to A", default: true)
+
+### Grid
+
+- `columns` — range 1–8, default 4 (desktop)
+- `mobile_columns` — select 1 or 2, default 2
+- `columns_gap` — range 0–100px, default 8px
+- `rows_gap` — range 0–100px, default 8px
+
+### Section layout
+
+- `section_width` — select `page-width` or `full-width`
+- `color_scheme` — color scheme picker
+- `padding-block-start` — range 0–100px, default 48px
+- `padding-block-end` — range 0–100px, default 48px

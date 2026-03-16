@@ -1,0 +1,375 @@
+{% doc %}
+  Renders all products from a selected collection in a client-side sortable CSS grid.
+  Designed for small catalogs (~10 products). No pagination.
+
+  @example
+  {% content_for 'block', type: 'all_products', id: 'all-products' %}
+{% enddoc %}
+
+{% liquid
+  assign id = block.id | replace: '_', '' | downcase
+  assign section_width = block.settings.section_width
+%}
+
+{% style %}
+  .all-products-{{ id }} {
+    padding-block-start: {{ block.settings['padding-block-start'] }}px;
+    padding-block-end: {{ block.settings['padding-block-end'] }}px;
+  }
+
+  .all-products__grid-{{ id }} {
+    grid-template-columns: repeat({{ block.settings.columns }}, 1fr);
+    column-gap: {{ block.settings.columns_gap }}px;
+    row-gap: {{ block.settings.rows_gap }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .all-products__grid-{{ id }} {
+      grid-template-columns: repeat({{ block.settings.mobile_columns }}, 1fr);
+    }
+  }
+{% endstyle %}
+
+<all-products-{{ id }}
+  data-default-sort="{{ block.settings.default_sort }}"
+  class="all-products-{{ id }} color-{{ block.settings.color_scheme }} {{ section_width }}"
+  {{ block.shopify_attributes }}
+>
+  {%- liquid
+    assign show_any_sort = false
+    if block.settings.show_sort_price_asc or block.settings.show_sort_price_desc or block.settings.show_sort_name_asc or block.settings.show_sort_name_desc
+      assign show_any_sort = true
+    endif
+  -%}
+
+  {% if show_any_sort %}
+    <div class="all-products__sort">
+      {% if block.settings.show_sort_price_asc %}
+        <button class="all-products__sort-btn" data-sort="price-asc" type="button">
+          {{- 'blocks.all_products.sort.price_asc' | t -}}
+        </button>
+      {% endif %}
+      {% if block.settings.show_sort_price_desc %}
+        <button class="all-products__sort-btn" data-sort="price-desc" type="button">
+          {{- 'blocks.all_products.sort.price_desc' | t -}}
+        </button>
+      {% endif %}
+      {% if block.settings.show_sort_name_asc %}
+        <button class="all-products__sort-btn" data-sort="name-asc" type="button">
+          {{- 'blocks.all_products.sort.name_asc' | t -}}
+        </button>
+      {% endif %}
+      {% if block.settings.show_sort_name_desc %}
+        <button class="all-products__sort-btn" data-sort="name-desc" type="button">
+          {{- 'blocks.all_products.sort.name_desc' | t -}}
+        </button>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="all-products__grid all-products__grid-{{ id }}" data-all-products-grid>
+    {% if block.settings.collection != blank %}
+      {% if block.settings.collection.products_count > 0 %}
+        {% for product in block.settings.collection.products %}
+          <div class="all-products__card"
+               data-price="{{ product.price }}"
+               data-name="{{ product.title | downcase | escape }}">
+            <a href="{{ product.url }}" class="all-products__card-link">
+              <div class="all-products__card-image">
+                {% if product.featured_image %}
+                  {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: product.featured_image.alt }}
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag }}
+                {% endif %}
+              </div>
+              <div class="all-products__card-info">
+                <p class="all-products__card-title">{{ product.title }}</p>
+                <p class="all-products__card-price">{{ product.price | money }}</p>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="all-products__empty" style="grid-column: 1 / -1;">
+          {{ 'blocks.all_products.no_products' | t }}
+        </p>
+      {% endif %}
+    {% else %}
+      <p class="all-products__empty" style="grid-column: 1 / -1;">
+        {{ 'blocks.all_products.select_collection' | t }}
+      </p>
+    {% endif %}
+  </div>
+</all-products-{{ id }}>
+
+{% stylesheet %}
+  .all-products__sort {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-block-end: 16px;
+  }
+
+  .all-products__sort-btn {
+    padding: 6px 14px;
+    border: 1px solid;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.875rem;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+
+  .all-products__sort-btn:hover,
+  .all-products__sort-btn.is-active {
+    opacity: 1;
+  }
+
+  .all-products__sort-btn.is-active {
+    font-weight: 600;
+  }
+
+  .all-products__grid {
+    display: grid;
+  }
+
+  .all-products__card-link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .all-products__card-image {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+  }
+
+  .all-products__card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .all-products__card-image svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .all-products__card-info {
+    padding-block: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .all-products__card-title,
+  .all-products__card-price {
+    margin: 0;
+  }
+
+  .all-products__card-title {
+    font-size: 1rem;
+  }
+
+  .all-products__card-price {
+    font-size: 0.875rem;
+  }
+
+  .all-products__empty {
+    text-align: center;
+    padding: 40px 20px;
+    opacity: 0.6;
+  }
+{% endstylesheet %}
+
+<script>
+  (function () {
+    class AllProducts{{ id }} extends HTMLElement {
+      connectedCallback() {
+        this._grid = this.querySelector('[data-all-products-grid]');
+        this._items = Array.from(this._grid.querySelectorAll('.all-products__card')).map(function (el) {
+          return {
+            el: el,
+            price: parseInt(el.dataset.price, 10) || 0,
+            name: el.dataset.name || ''
+          };
+        });
+        this._buttons = Array.from(this.querySelectorAll('.all-products__sort-btn'));
+        var self = this;
+        this._buttons.forEach(function (btn) {
+          btn.addEventListener('click', function () { self.sort(btn.dataset.sort); });
+        });
+        var defaultSort = this.dataset.defaultSort;
+        if (defaultSort) this.sort(defaultSort);
+      }
+
+      sort(key) {
+        var sorted = this._items.slice();
+        if (key === 'price-asc') sorted.sort(function (a, b) { return a.price - b.price; });
+        else if (key === 'price-desc') sorted.sort(function (a, b) { return b.price - a.price; });
+        else if (key === 'name-asc') sorted.sort(function (a, b) { return a.name.localeCompare(b.name); });
+        else if (key === 'name-desc') sorted.sort(function (a, b) { return b.name.localeCompare(a.name); });
+        var grid = this._grid;
+        sorted.forEach(function (item) { grid.appendChild(item.el); });
+        this._buttons.forEach(function (btn) {
+          btn.classList.toggle('is-active', btn.dataset.sort === key);
+        });
+      }
+    }
+    customElements.define('all-products-{{ id }}', AllProducts{{ id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "t:names.all_products",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.content"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:settings.collection"
+    },
+    {
+      "type": "header",
+      "content": "t:content.sorting"
+    },
+    {
+      "type": "select",
+      "id": "default_sort",
+      "label": "t:settings.default_sort",
+      "options": [
+        { "value": "price-asc", "label": "t:options.sort_price_asc" },
+        { "value": "price-desc", "label": "t:options.sort_price_desc" },
+        { "value": "name-asc", "label": "t:options.sort_name_asc" },
+        { "value": "name-desc", "label": "t:options.sort_name_desc" }
+      ],
+      "default": "price-asc"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_price_asc",
+      "label": "t:settings.show_sort_price_asc",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_price_desc",
+      "label": "t:settings.show_sort_price_desc",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_name_asc",
+      "label": "t:settings.show_sort_name_asc",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_name_desc",
+      "label": "t:settings.show_sort_name_desc",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.grid"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "t:settings.columns",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "t:settings.mobile_columns",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "columns_gap",
+      "label": "t:settings.horizontal_gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "rows_gap",
+      "label": "t:settings.vertical_gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "t:content.section_layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.section_width",
+      "options": [
+        { "value": "page-width", "label": "t:options.page" },
+        { "value": "full-width", "label": "t:options.full" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.all_products",
+      "category": "t:categories.products"
+    }
+  ]
+}
+{% endschema %}
