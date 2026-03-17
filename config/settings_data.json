@@ -9,12 +9,14 @@
  */
 {
   "current": {
-    "logo_height": 36,
+    "logo": "shopify://shop_images/wss-logo-black-text_1ed2ea19-c4f7-49c5-8215-427c43587c57.svg",
+    "logo_inverse": "shopify://shop_images/wss-logo-white-text_e83c772d-f1ec-4f9d-ba66-7fa74f7cea61.svg",
+    "logo_height": 28,
     "logo_height_mobile": 28,
-    "type_body_font": "inter_n4",
-    "type_subheading_font": "inter_n5",
-    "type_heading_font": "inter_n7",
-    "type_accent_font": "inter_n7",
+    "type_body_font": "nunito_n4",
+    "type_subheading_font": "nunito_n4",
+    "type_heading_font": "nunito_n7",
+    "type_accent_font": "nunito_n7",
     "type_size_paragraph": "14",
     "type_line_height_paragraph": "body-loose",
     "type_font_h1": "heading",
