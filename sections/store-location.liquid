@@ -2,6 +2,7 @@
   class="store-location color-{{ section.settings.color_scheme }} spacing-style"
   style="
     --map-height: {{ section.settings.map_height }}px;
+    --map-height-mobile: {{ section.settings.map_height_mobile }}px;
     {%- render 'spacing-style', settings: section.settings %}
   "
 >
@@ -208,7 +209,8 @@
     }
 
     .store-location__map {
-      height: 280px;
+      min-height: var(--map-height-mobile);
+      height: var(--map-height-mobile);
     }
 
     .store-location__info {
@@ -291,10 +293,20 @@
       "id": "map_height",
       "label": "t:sections.store_location.settings.map_height",
       "min": 300,
-      "max": 700,
+      "max": 800,
       "step": 20,
       "unit": "px",
       "default": 500
+    },
+    {
+      "type": "range",
+      "id": "map_height_mobile",
+      "label": "t:sections.store_location.settings.map_height_mobile",
+      "min": 200,
+      "max": 500,
+      "step": 20,
+      "unit": "px",
+      "default": 280
     },
     {
       "type": "header",
