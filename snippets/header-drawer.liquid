@@ -724,18 +724,6 @@
       -%}
       {%- if drawer_footer_menu != blank or drawer_has_social -%}
         <div class="menu-drawer__footer">
-          {%- if drawer_footer_menu != blank -%}
-            <nav class="menu-drawer__footer-nav" aria-label="{{ drawer_footer_menu.title | escape }}">
-              <ul class="menu-drawer__footer-links list-unstyled">
-                {%- for link in drawer_footer_menu.links -%}
-                  <li>
-                    <a href="{{ link.url }}" class="menu-drawer__footer-link">{{ link.title | escape }}</a>
-                  </li>
-                {%- endfor -%}
-              </ul>
-            </nav>
-          {%- endif -%}
-
           {%- if drawer_has_social -%}
             <div class="menu-drawer__social-links" style="--drawer-social-icon-size: {{ block_settings.drawer_social_icon_size | default: 28 }}px; --drawer-social-padding-top: {{ block_settings.drawer_social_padding_top | default: 0 }}px; --drawer-social-padding-bottom: {{ block_settings.drawer_social_padding_bottom | default: 0 }}px; --drawer-social-padding-left: {{ block_settings.drawer_social_padding_left | default: 0 }}px; --drawer-social-padding-right: {{ block_settings.drawer_social_padding_right | default: 0 }}px;">
               {%- assign drawer_social_platforms = 'instagram,facebook,tiktok,youtube,twitter,pinterest' | split: ',' -%}
@@ -757,6 +745,18 @@
                 {%- endif -%}
               {%- endfor -%}
             </div>
+          {%- endif -%}
+
+          {%- if drawer_footer_menu != blank -%}
+            <nav class="menu-drawer__footer-nav" aria-label="{{ drawer_footer_menu.title | escape }}">
+              <ul class="menu-drawer__footer-links list-unstyled">
+                {%- for link in drawer_footer_menu.links -%}
+                  <li>
+                    <a href="{{ link.url }}" class="menu-drawer__footer-link">{{ link.title | escape }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </nav>
           {%- endif -%}
         </div>
       {%- endif -%}
