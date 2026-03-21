@@ -2815,8 +2815,24 @@ product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) > *:not(.tax-note) {
 @media screen and (max-width: 749px) {
   .mobile-column {
     flex-flow: column nowrap;
-    align-items: var(--horizontal-alignment);
+    align-items: var(--horizontal-alignment-mobile, var(--horizontal-alignment));
     justify-content: var(--vertical-alignment-mobile);
+  }
+
+  .layout-panel-flex--column {
+    align-items: var(--horizontal-alignment-mobile, var(--horizontal-alignment));
+  }
+
+  [style*='--horizontal-alignment-mobile: flex-start'] .text-block {
+    --text-align-default: left;
+  }
+
+  [style*='--horizontal-alignment-mobile: center'] .text-block {
+    --text-align-default: center;
+  }
+
+  [style*='--horizontal-alignment-mobile: flex-end'] .text-block {
+    --text-align-default: right;
   }
 
   .layout-panel-flex--row:not(.mobile-column) {
