@@ -22,6 +22,7 @@
         "map_embed_url": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2830.525623!2d20.4634!3d44.8104!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x475a7ab7ebe3a82f%3A0xd1feaf679a3b1a5a!2zTWnFoWFyc2thIDcsIEJlb2dyYWQ!5e0!3m2!1sen!2srs!4v1710000000000!5m2!1sen!2srs",
         "map_height": 800,
         "map_height_mobile": 360,
+        "map_mobile_offset": 180,
         "color_scheme": "scheme-1",
         "padding-block-start": 0,
         "padding-block-end": 0

@@ -776,7 +776,9 @@
         "map_embed_url": "Google Maps embed URL",
         "map_embed_url_info": "In Google Maps, click Share → Embed a map → Copy HTML, then paste only the src URL here.",
         "map_height": "Map height (desktop)",
-        "map_height_mobile": "Map height (mobile)"
+        "map_height_mobile": "Map height (mobile)",
+        "map_mobile_offset": "Mobile pin offset",
+        "map_mobile_offset_info": "Shifts the map up on mobile to center the pin when the info card is visible."
       }
     }
   },

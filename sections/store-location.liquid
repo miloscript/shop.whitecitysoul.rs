@@ -3,6 +3,7 @@
   style="
     --map-height: {{ section.settings.map_height }}px;
     --map-height-mobile: {{ section.settings.map_height_mobile }}px;
+    --map-mobile-offset: {{ section.settings.map_mobile_offset }}px;
     {%- render 'spacing-style', settings: section.settings %}
   "
 >
@@ -211,6 +212,12 @@
     .store-location__map {
       min-height: var(--map-height-mobile);
       height: var(--map-height-mobile);
+      overflow: hidden;
+    }
+
+    .store-location__map iframe {
+      margin-top: calc(var(--map-mobile-offset) * -1);
+      height: calc(100% + var(--map-mobile-offset));
     }
 
     .store-location__info {
@@ -307,6 +314,17 @@
       "step": 20,
       "unit": "px",
       "default": 280
+    },
+    {
+      "type": "range",
+      "id": "map_mobile_offset",
+      "label": "t:sections.store_location.settings.map_mobile_offset",
+      "info": "t:sections.store_location.settings.map_mobile_offset_info",
+      "min": 0,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "default": 80
     },
     {
       "type": "header",
