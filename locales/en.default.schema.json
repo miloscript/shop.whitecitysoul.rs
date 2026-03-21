@@ -478,6 +478,7 @@
     "caret": "Caret",
     "drawer_header_row_between": "Row – logo right",
     "drawer_header_row_start": "Row – logo left",
+    "drawer_header_logo_center": "X left, logo centered",
     "drawer_header_column_center": "Column – centered",
     "drawer_header_column_start": "Column – left aligned",
     "carousel": "Carousel",
