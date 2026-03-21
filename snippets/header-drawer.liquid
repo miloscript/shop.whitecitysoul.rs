@@ -73,16 +73,29 @@
         color-{{ block_settings.color_scheme }}
       "
     >
-      <button
-        class="button close-button menu-drawer__close-button"
-        type="button"
-        aria-label="{{ 'actions.close' | t }}"
-        on:click="/close"
-      >
-        <span class="svg-wrapper header-drawer-icon header-drawer-icon--close">
-          {{- 'icon-close.svg' | inline_asset_content -}}
-        </span>
-      </button>
+      <div class="menu-drawer__header">
+        <button
+          class="button close-button menu-drawer__close-button"
+          type="button"
+          aria-label="{{ 'actions.close' | t }}"
+          on:click="/close"
+        >
+          <span class="svg-wrapper header-drawer-icon header-drawer-icon--close">
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </span>
+        </button>
+
+        {%- if block_settings.drawer_show_logo -%}
+          <a href="{{ routes.root_url }}" class="menu-drawer__logo" aria-label="{{ shop.name }}">
+            {%- if settings.logo != blank -%}
+              {{- settings.logo | image_url: height: settings.logo_height_mobile | image_tag: class: 'menu-drawer__logo-image', alt: shop.name -}}
+            {%- else -%}
+              <span class="menu-drawer__logo-text">{{ shop.name }}</span>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      </div>
+
       <nav
         class="menu-drawer__navigation"
         style="
@@ -697,6 +710,53 @@
         {%- endif -%}
       </div>
 
+      {%- liquid
+        assign drawer_footer_menu = block_settings.drawer_footer_menu
+        assign drawer_has_social = false
+        if block_settings.drawer_instagram_url != blank or block_settings.drawer_facebook_url != blank or block_settings.drawer_tiktok_url != blank or block_settings.drawer_youtube_url != blank or block_settings.drawer_twitter_url != blank or block_settings.drawer_pinterest_url != blank
+          assign drawer_has_social = true
+        endif
+      -%}
+
+      {%- if drawer_footer_menu != blank or drawer_has_social -%}
+        <div class="menu-drawer__footer">
+          {%- if drawer_footer_menu != blank -%}
+            <nav class="menu-drawer__footer-nav" aria-label="{{ drawer_footer_menu.title | escape }}">
+              <ul class="menu-drawer__footer-links list-unstyled">
+                {%- for link in drawer_footer_menu.links -%}
+                  <li>
+                    <a href="{{ link.url }}" class="menu-drawer__footer-link">{{ link.title | escape }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </nav>
+          {%- endif -%}
+
+          {%- if drawer_has_social -%}
+            <div class="menu-drawer__social-links">
+              {%- assign drawer_social_platforms = 'instagram,facebook,tiktok,youtube,twitter,pinterest' | split: ',' -%}
+              {%- for platform in drawer_social_platforms -%}
+                {%- assign url_key = 'drawer_' | append: platform | append: '_url' -%}
+                {%- assign social_url = block_settings[url_key] -%}
+                {%- if social_url != blank -%}
+                  <a
+                    href="{{ social_url }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="menu-drawer__social-link"
+                    aria-label="{{ platform | capitalize }}"
+                  >
+                    <svg class="menu-drawer__social-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      {%- render 'icon', icon: platform -%}
+                    </svg>
+                  </a>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
       {% liquid
         if block_settings.menu_style == 'featured_collections'
           assign top_level_featured_collections = linklist.links | where: 'type', 'collection_link'
@@ -759,6 +819,87 @@
 </header-drawer>
 
 {% stylesheet %}
+  .menu-drawer__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--padding-lg) var(--margin-xl);
+    border-block-end: var(--style-border-width) solid var(--color-border);
+    margin-block-end: var(--padding-lg);
+  }
+
+  .menu-drawer__close-button {
+    flex-shrink: 0;
+  }
+
+  .menu-drawer__logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--color-foreground);
+  }
+
+  .menu-drawer__logo-image {
+    max-height: var(--header-logo-image-height-mobile, 40px);
+    width: auto;
+    display: block;
+  }
+
+  .menu-drawer__logo-text {
+    font-family: var(--font-heading--family);
+    font-weight: 600;
+    font-size: var(--font-size--xl);
+  }
+
+  .menu-drawer__footer {
+    margin-block-start: auto;
+    padding: var(--padding-xl) var(--margin-xl) var(--padding-lg);
+    border-block-start: var(--style-border-width) solid var(--color-border);
+  }
+
+  .menu-drawer__footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-sm) var(--gap-xl);
+    margin-block-end: var(--padding-lg);
+  }
+
+  .menu-drawer__footer-link {
+    font-size: var(--font-size--sm);
+    color: var(--color-foreground-muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-foreground);
+    }
+  }
+
+  .menu-drawer__social-links {
+    display: flex;
+    gap: var(--gap-lg);
+    flex-wrap: wrap;
+  }
+
+  .menu-drawer__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-foreground);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .menu-drawer__social-icon {
+    width: var(--icon-size-lg);
+    height: var(--icon-size-lg);
+    flex-shrink: 0;
+  }
+
   .header__icon--menu {
     position: initial;
   }
