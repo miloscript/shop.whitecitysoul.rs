@@ -723,7 +723,7 @@
         endif
       -%}
       {%- if drawer_footer_menu != blank or drawer_has_social -%}
-        <div class="menu-drawer__footer">
+        <div class="menu-drawer__footer" style="--drawer-footer-padding-top: {{ block_settings.drawer_footer_padding_top | default: 20 }}px; --drawer-footer-padding-bottom: {{ block_settings.drawer_footer_padding_bottom | default: 16 }}px; --drawer-footer-padding-left: {{ block_settings.drawer_footer_padding_left | default: 20 }}px; --drawer-footer-padding-right: {{ block_settings.drawer_footer_padding_right | default: 20 }}px;">
           {%- if drawer_has_social -%}
             <div class="menu-drawer__social-links" style="--drawer-social-icon-size: {{ block_settings.drawer_social_icon_size | default: 28 }}px; --drawer-social-padding-top: {{ block_settings.drawer_social_padding_top | default: 0 }}px; --drawer-social-padding-bottom: {{ block_settings.drawer_social_padding_bottom | default: 0 }}px; --drawer-social-padding-left: {{ block_settings.drawer_social_padding_left | default: 0 }}px; --drawer-social-padding-right: {{ block_settings.drawer_social_padding_right | default: 0 }}px;">
               {%- assign drawer_social_platforms = 'instagram,facebook,tiktok,youtube,twitter,pinterest' | split: ',' -%}
@@ -892,7 +892,10 @@
 
   .menu-drawer__footer {
     margin-block-start: auto;
-    padding: var(--padding-xl) var(--margin-xl) var(--padding-lg);
+    padding-top: var(--drawer-footer-padding-top, 20px);
+    padding-bottom: var(--drawer-footer-padding-bottom, 16px);
+    padding-left: var(--drawer-footer-padding-left, 20px);
+    padding-right: var(--drawer-footer-padding-right, 20px);
     border-block-start: var(--style-border-width) solid var(--color-border);
   }
 
