@@ -737,7 +737,7 @@
           {%- endif -%}
 
           {%- if drawer_has_social -%}
-            <div class="menu-drawer__social-links" style="--drawer-social-icon-size: {{ block_settings.drawer_social_icon_size | default: 28 }}px;">
+            <div class="menu-drawer__social-links" style="--drawer-social-icon-size: {{ block_settings.drawer_social_icon_size | default: 28 }}px; --drawer-social-padding-top: {{ block_settings.drawer_social_padding_top | default: 0 }}px; --drawer-social-padding-bottom: {{ block_settings.drawer_social_padding_bottom | default: 0 }}px; --drawer-social-padding-left: {{ block_settings.drawer_social_padding_left | default: 0 }}px; --drawer-social-padding-right: {{ block_settings.drawer_social_padding_right | default: 0 }}px;">
               {%- assign drawer_social_platforms = 'instagram,facebook,tiktok,youtube,twitter,pinterest' | split: ',' -%}
               {%- for platform in drawer_social_platforms -%}
                 {%- assign url_key = 'drawer_' | append: platform | append: '_url' -%}
@@ -917,6 +917,10 @@
     display: flex;
     gap: var(--gap-lg);
     flex-wrap: wrap;
+    padding-top: var(--drawer-social-padding-top, 0px);
+    padding-bottom: var(--drawer-social-padding-bottom, 0px);
+    padding-left: var(--drawer-social-padding-left, 0px);
+    padding-right: var(--drawer-social-padding-right, 0px);
   }
 
   .menu-drawer__social-link {
