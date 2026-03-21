@@ -1,0 +1,340 @@
+<div
+  class="store-location color-{{ section.settings.color_scheme }} spacing-style"
+  style="
+    --map-height: {{ section.settings.map_height }}px;
+    {%- render 'spacing-style', settings: section.settings %}
+  "
+>
+  <div class="store-location__map">
+    {% if section.settings.map_embed_url != blank %}
+      <iframe
+        src="{{ section.settings.map_embed_url | escape }}"
+        width="100%"
+        height="100%"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="{{ section.settings.store_name | escape }}"
+      ></iframe>
+    {% else %}
+      <div class="store-location__map-placeholder">
+        {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="store-location__info">
+    {% if section.settings.heading != blank %}
+      <h2 class="store-location__heading">{{ section.settings.heading | escape }}</h2>
+    {% endif %}
+
+    {% if section.settings.description != blank %}
+      <p class="store-location__description">{{ section.settings.description }}</p>
+    {% endif %}
+
+    <div class="store-location__details">
+      {% if section.settings.store_name != blank %}
+        <div class="store-location__detail">
+          <span class="store-location__detail-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </span>
+          <span>{{ section.settings.store_name | escape }}</span>
+        </div>
+      {% endif %}
+
+      {% if section.settings.address != blank %}
+        <div class="store-location__detail">
+          <span class="store-location__detail-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          <span>{{ section.settings.address | escape }}</span>
+        </div>
+      {% endif %}
+
+      {% if section.settings.phone != blank %}
+        <div class="store-location__detail">
+          <span class="store-location__detail-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.01 2.22 2 2 0 012 .04h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          </span>
+          <a href="tel:{{ section.settings.phone | remove: ' ' | escape }}">{{ section.settings.phone | escape }}</a>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if section.settings.hours_heading != blank or section.settings.hours_text != blank %}
+      <div class="store-location__hours">
+        {% if section.settings.hours_heading != blank %}
+          <h3 class="store-location__hours-heading">{{ section.settings.hours_heading | escape }}</h3>
+        {% endif %}
+        {% if section.settings.hours_text != blank %}
+          <div class="store-location__hours-text">{{ section.settings.hours_text }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .shopify-section:has(.store-location) {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .store-location {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    min-height: var(--map-height);
+    flex: 1;
+  }
+
+  .store-location__map {
+    height: auto;
+    min-height: var(--map-height);
+    overflow: hidden;
+  }
+
+  .store-location__map iframe {
+    width: 100%;
+    height: 100%;
+    min-height: var(--map-height);
+    display: block;
+  }
+
+  .store-location__map-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .store-location__map-placeholder .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .store-location__info {
+    padding: 4rem 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+    max-width: 560px;
+  }
+
+  .store-location__heading {
+    font-size: clamp(1.75rem, 2.5vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  .store-location__description {
+    margin: 0;
+    line-height: 1.7;
+    opacity: 0.75;
+    font-size: 0.9375rem;
+  }
+
+  .store-location__details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid currentColor;
+    opacity: 0.9;
+  }
+
+  .store-location__details:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .store-location__detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+  }
+
+  .store-location__detail-icon {
+    flex-shrink: 0;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-top: 0.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+  }
+
+  .store-location__detail-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .store-location__detail a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .store-location__hours {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .store-location__hours-heading {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0;
+    opacity: 0.45;
+  }
+
+  .store-location__hours-text {
+    line-height: 1.8;
+    font-size: 0.9375rem;
+  }
+
+  @media (max-width: 749px) {
+    .store-location {
+      grid-template-columns: 1fr;
+    }
+
+    .store-location__map {
+      height: 280px;
+    }
+
+    .store-location__info {
+      padding: 2.5rem 1.5rem;
+      max-width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.store_location",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "Visit us in store"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:names.description",
+      "default": "<p>Browse and pick up our full collection in person. Our concept store offers a curated selection of clothing and accessories — come see, touch and try everything before you buy.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.store_location.headers.store_info"
+    },
+    {
+      "type": "text",
+      "id": "store_name",
+      "label": "t:sections.store_location.settings.store_name",
+      "default": "Nixon Concept Store"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "t:sections.store_location.settings.address",
+      "default": "Mišarska 7, Beograd"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "t:sections.store_location.settings.phone"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.store_location.headers.hours"
+    },
+    {
+      "type": "text",
+      "id": "hours_heading",
+      "label": "t:sections.store_location.settings.hours_heading",
+      "default": "Working hours"
+    },
+    {
+      "type": "richtext",
+      "id": "hours_text",
+      "label": "t:sections.store_location.settings.hours_text",
+      "default": "<p>Mon – Fri: 10:00 – 20:00<br>Saturday: 10:00 – 18:00<br>Sunday: Closed</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.store_location.headers.map"
+    },
+    {
+      "type": "text",
+      "id": "map_embed_url",
+      "label": "t:sections.store_location.settings.map_embed_url",
+      "info": "t:sections.store_location.settings.map_embed_url_info",
+      "default": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2830.3940406887437!2d20.461!3d44.812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDTCsDQ4JzQzLjIiTiAyMMKwMjcnMzkuNiJF!5e0!3m2!1sen!2srs!4v1234567890"
+    },
+    {
+      "type": "range",
+      "id": "map_height",
+      "label": "t:sections.store_location.settings.map_height",
+      "min": 300,
+      "max": 700,
+      "step": 20,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "header",
+      "content": "t:content.colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.store_location"
+    }
+  ]
+}
+{% endschema %}
