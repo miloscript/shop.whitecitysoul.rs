@@ -476,6 +476,10 @@
     "capitalize": "Capitalize",
     "caption": "Caption",
     "caret": "Caret",
+    "drawer_header_row_between": "Row – logo right",
+    "drawer_header_row_start": "Row – logo left",
+    "drawer_header_column_center": "Column – centered",
+    "drawer_header_column_start": "Column – left aligned",
     "carousel": "Carousel",
     // Icon selection option for carrot graphic
     "carrot": "Carrot",
@@ -1118,6 +1122,12 @@
     // Checkbox label to toggle visibility of UI elements
     "show": "Show",
     "drawer_show_logo": "Show logo",
+    "drawer_logo_height": "Logo height",
+    "drawer_header_layout": "Header layout",
+    "drawer_header_padding": "Header padding",
+    "drawer_close_icon_size": "Close button icon size",
+    "drawer_close_padding": "Close button padding",
+    "drawer_social_icon_size": "Icon size",
     "drawer_footer_menu": "Footer links",
     "drawer_facebook_url": "Facebook URL",
     "drawer_instagram_url": "Instagram URL",
