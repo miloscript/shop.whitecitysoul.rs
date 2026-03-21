@@ -44,7 +44,15 @@
             "color_scheme_navigation_bar": "",
             "drawer_accordion": false,
             "drawer_accordion_expand_first": false,
-            "drawer_dividers": false
+            "drawer_dividers": false,
+            "drawer_show_logo": true,
+            "drawer_footer_menu": "main-menu",
+            "drawer_instagram_url": "https://www.instagram.com/nixon.butik/",
+            "drawer_facebook_url": "",
+            "drawer_tiktok_url": "",
+            "drawer_youtube_url": "",
+            "drawer_twitter_url": "",
+            "drawer_pinterest_url": ""
           },
           "blocks": {}
         }
