@@ -350,6 +350,27 @@
     "blog_post_date": "Date",
     "blog_post_description": "An excerpt of your blog post's content"
   },
+  "sections": {
+    "store_location": {
+      "name": "Store location",
+      "headers": {
+        "content": "Content",
+        "store_info": "Store information",
+        "hours": "Working hours",
+        "map": "Map"
+      },
+      "settings": {
+        "store_name": "Store name",
+        "address": "Address",
+        "phone": "Phone number",
+        "hours_heading": "Hours label",
+        "hours_text": "Hours",
+        "map_embed_url": "Google Maps embed URL",
+        "map_embed_url_info": "In Google Maps, click Share → Embed a map → Copy HTML, then paste only the src URL here.",
+        "map_height": "Map height"
+      }
+    }
+  },
   "products": {
     "product": {
       "add_to_cart": "Add to cart",

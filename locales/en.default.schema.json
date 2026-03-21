@@ -438,7 +438,8 @@
     "video_section": "Video",
     "view_all_button": "View all",
     "pills": "Pills",
-    "comparison_slider": "Comparison slider"
+    "comparison_slider": "Comparison slider",
+    "store_location": "Store location"
   },
   "options": {
     "above_carousel": "Above carousel",
@@ -758,6 +759,25 @@
     "youtube": "YouTube",
     "with_hints": "With hints",
     "below_media": "Below media"
+  },
+  "sections": {
+    "store_location": {
+      "headers": {
+        "store_info": "Store information",
+        "hours": "Working hours",
+        "map": "Map"
+      },
+      "settings": {
+        "store_name": "Store name",
+        "address": "Address",
+        "phone": "Phone number",
+        "hours_heading": "Hours label",
+        "hours_text": "Hours",
+        "map_embed_url": "Google Maps embed URL",
+        "map_embed_url_info": "In Google Maps, click Share → Embed a map → Copy HTML, then paste only the src URL here.",
+        "map_height": "Map height"
+      }
+    }
   },
   "settings": {
     "accordion": "Accordion",
