@@ -154,13 +154,17 @@
                 "media_fit": "contain",
                 "media_radius": 0,
                 "extend_media": false,
-                "zoom": false,
+                "zoom": true,
                 "video_loop": false,
                 "hide_variants": false,
                 "padding-block-start": 0,
                 "padding-block-end": 12,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "desktop_padding_top": 0,
+                "desktop_padding_bottom": 0,
+                "desktop_padding_left": 0,
+                "desktop_padding_right": 0
               },
               "blocks": {}
             },
@@ -171,7 +175,7 @@
                 "show_swatches": true,
                 "alignment": "left",
                 "padding-block-start": 0,
-                "padding-block-end": 0,
+                "padding-block-end": 8,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
