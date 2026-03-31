@@ -4,14 +4,6 @@
   {{ closest.product | structured_data }}
 </script>
 
-{% capture media_gallery %}
-  {%- content_for 'block',
-    type: '_product-media-gallery',
-    id: 'media-gallery',
-    closest.product: closest.product
-  -%}
-{% endcapture %}
-
 {% capture product_details %}
   {% content_for 'block',
     type: '_product-details',
@@ -169,10 +161,8 @@
 {% endif %}
 
 {% render 'product-information-content',
-  product_media_size: closest.product.media.size,
   section_id: section.id,
   settings: section.settings,
-  media_gallery: media_gallery,
   product_details: product_details,
   additional_blocks: additional_blocks
 %}

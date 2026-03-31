@@ -60,35 +60,6 @@
     "main": {
       "type": "product-information",
       "blocks": {
-        "media-gallery": {
-          "type": "_product-media-gallery",
-          "static": true,
-          "settings": {
-            "media_presentation": "carousel",
-            "media_columns": "two",
-            "image_gap": 4,
-            "large_first_image": false,
-            "icons_style": "chevron",
-            "slideshow_controls_style": "counter",
-            "slideshow_mobile_controls_style": "counter",
-            "thumbnail_position": "right",
-            "thumbnail_width": 44,
-            "thumbnail_radius": 0,
-            "aspect_ratio": "adapt",
-            "constrain_to_viewport": true,
-            "media_fit": "contain",
-            "media_radius": 0,
-            "extend_media": false,
-            "zoom": true,
-            "video_loop": true,
-            "hide_variants": true,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
         "product-details": {
           "type": "_product-details",
           "static": true,
@@ -225,6 +196,34 @@
               },
               "block_order": []
             },
+            "media_gallery": {
+              "type": "_product-media-gallery",
+              "settings": {
+                "media_presentation": "carousel",
+                "media_columns": "two",
+                "image_gap": 4,
+                "large_first_image": false,
+                "icons_style": "chevron",
+                "slideshow_controls_style": "counter",
+                "slideshow_mobile_controls_style": "counter",
+                "thumbnail_position": "right",
+                "thumbnail_width": 44,
+                "thumbnail_radius": 0,
+                "aspect_ratio": "adapt",
+                "constrain_to_viewport": true,
+                "media_fit": "contain",
+                "media_radius": 0,
+                "extend_media": false,
+                "zoom": true,
+                "video_loop": true,
+                "hide_variants": true,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
             "text_aEtTtq": {
               "type": "text",
               "name": "Product description",
@@ -255,6 +254,7 @@
           "block_order": [
             "text_xrnftG",
             "price_tVjtKg",
+            "media_gallery",
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",

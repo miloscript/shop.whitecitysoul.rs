@@ -4,13 +4,6 @@
   {{ section.settings.product | structured_data }}
 </script>
 
-{% capture media_gallery %}
-  {% content_for 'block',
-    type: '_featured-product-information-carousel',
-    id: 'media-gallery'
-  %}
-{% endcapture %}
-
 {% capture product_details %}
   {% content_for 'block',
     type: '_product-details',
@@ -24,10 +17,8 @@
 
 <featured-product-information id="{{ section.id }}">
   {% render 'product-information-content',
-    product_media_size: section.settings.product.media.size,
     section_id: section.id,
     settings: section.settings,
-    media_gallery: media_gallery,
     product_details: product_details,
     additional_blocks: additional_blocks
   %}
@@ -151,21 +142,6 @@
         "equal_columns": true
       },
       "blocks": {
-        "media-gallery": {
-          "type": "_featured-product-information-carousel",
-          "static": true,
-          "settings": {
-            "constrain_to_viewport": true,
-            "media_fit": "contain",
-            "media_radius": 0,
-            "extend_media": false,
-            "hide_variants": true,
-            "slideshow_controls_style": "counter",
-            "slideshow_mobile_controls_style": "dots",
-            "thumbnail_position": "bottom",
-            "thumbnail_width": 44
-          }
-        },
         "product-details": {
           "type": "_product-details",
           "static": true,
@@ -197,6 +173,20 @@
               },
               "block_order": ["title", "price"]
             },
+            "media-gallery": {
+              "type": "_featured-product-information-carousel",
+              "settings": {
+                "constrain_to_viewport": true,
+                "media_fit": "contain",
+                "media_radius": 0,
+                "extend_media": false,
+                "hide_variants": true,
+                "slideshow_controls_style": "counter",
+                "slideshow_mobile_controls_style": "dots",
+                "thumbnail_position": "bottom",
+                "thumbnail_width": 44
+              }
+            },
             "review_stars": {
               "type": "review",
               "name": "t:names.product_review_stars"
@@ -224,7 +214,7 @@
               }
             }
           },
-          "block_order": ["header", "review_stars", "variant_picker", "buy_buttons"]
+          "block_order": ["header", "media-gallery", "review_stars", "variant_picker", "buy_buttons"]
         }
       }
     }

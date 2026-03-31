@@ -1,10 +1,17 @@
 
-
 {%- assign block_settings = block.settings -%}
+{%- liquid
+  assign media_position = section.settings.desktop_media_position | default: 'left'
+  assign equal_columns = section.settings.equal_columns
+  assign limit_details_width = section.settings.limit_details_width
+-%}
 <div
   id="ProductInformation-{{ section.id }}"
   class="
     product-details
+    product-details--media-{{ media_position }}
+    {% if equal_columns %} product-details--equal-columns{% endif %}
+    {% if equal_columns and limit_details_width %} product-details--limit-details{% endif %}
     {% if block_settings.sticky_details_desktop %} sticky-content--desktop{% endif %}
     {% if block_settings.height == 'fill' -%} full-height--desktop{% endif -%}
   "
@@ -61,6 +68,114 @@
 
     .full-height--desktop .group-block {
       align-self: var(--details-position, 'flex-start');
+    }
+  }
+
+  /*
+   * Two-column desktop layout when media gallery is inside product details.
+   * On mobile, blocks flow in merchant-defined order (single column).
+   * On desktop, media is pulled into its own column.
+   */
+  @media screen and (min-width: 750px) {
+    /* When group-block-content contains a media gallery, switch to grid */
+    .product-details .group-block-content:has(media-gallery),
+    .product-details .group-block-content:has(.product-media-gallery__placeholder-image) {
+      display: grid;
+      grid-template-columns: 1fr min(50vw, var(--sidebar-width));
+      column-gap: var(--gap);
+      row-gap: var(--gap);
+      align-items: start;
+      height: auto;
+    }
+
+    /* Media spans the left column across all rows */
+    .product-details .group-block-content > media-gallery,
+    .product-details .group-block-content > div:has(> .product-media-gallery__placeholder-image) {
+      grid-column: 1;
+      grid-row: 1 / span 999;
+      width: 0;
+      min-width: 100%;
+    }
+
+    /* All other blocks go in the right column */
+    .product-details .group-block-content:has(media-gallery) > :not(media-gallery),
+    .product-details .group-block-content:has(.product-media-gallery__placeholder-image) > :not(:has(.product-media-gallery__placeholder-image)) {
+      grid-column: 2;
+      min-width: 0;
+    }
+
+    /* Media on right: swap columns */
+    .product-details--media-right .group-block-content:has(media-gallery),
+    .product-details--media-right .group-block-content:has(.product-media-gallery__placeholder-image) {
+      grid-template-columns: min(50vw, var(--sidebar-width)) 1fr;
+    }
+
+    .product-details--media-right .group-block-content > media-gallery,
+    .product-details--media-right .group-block-content > div:has(> .product-media-gallery__placeholder-image) {
+      grid-column: 2;
+    }
+
+    .product-details--media-right .group-block-content:has(media-gallery) > :not(media-gallery),
+    .product-details--media-right .group-block-content:has(.product-media-gallery__placeholder-image) > :not(:has(.product-media-gallery__placeholder-image)) {
+      grid-column: 1;
+    }
+  }
+
+  /* Equal columns mode */
+  @media screen and (min-width: 750px) {
+    .product-details--equal-columns .group-block-content:has(media-gallery),
+    .product-details--equal-columns .group-block-content:has(.product-media-gallery__placeholder-image) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .product-details--limit-details .group-block-content > :not(media-gallery):not(:has(.product-media-gallery__placeholder-image)) {
+    max-width: var(--sidebar-width);
+  }
+
+  @media screen and (min-width: 1600px) {
+    .product-details--limit-details .group-block-content > :not(media-gallery):not(:has(.product-media-gallery__placeholder-image)) {
+      max-width: 32rem;
+    }
+  }
+
+  /* Wider media column on large screens (only when not equal columns) */
+  @media screen and (min-width: 1200px) {
+    .product-details--media-left:not(.product-details--equal-columns) .group-block-content:has(media-gallery),
+    .product-details--media-left:not(.product-details--equal-columns) .group-block-content:has(.product-media-gallery__placeholder-image) {
+      grid-template-columns: 2fr 1fr;
+    }
+
+    .product-details--media-right:not(.product-details--equal-columns) .group-block-content:has(media-gallery),
+    .product-details--media-right:not(.product-details--equal-columns) .group-block-content:has(.product-media-gallery__placeholder-image) {
+      grid-template-columns: 1fr 2fr;
+    }
+  }
+
+  /* Extend media to screen edge */
+  @media screen and (min-width: 750px) {
+    .product-details--media-left .group-block-content > media-gallery.media-gallery--extend,
+    .product-details--media-left .group-block-content > div:has(> .product-media-gallery__placeholder-image).media-gallery--extend {
+      margin-inline-start: calc(-1 * var(--full-page-grid-margin));
+      width: calc(100% + var(--full-page-grid-margin));
+      min-width: calc(100% + var(--full-page-grid-margin));
+    }
+
+    .product-details--media-right .group-block-content > media-gallery.media-gallery--extend,
+    .product-details--media-right .group-block-content > div:has(> .product-media-gallery__placeholder-image).media-gallery--extend {
+      margin-inline-end: calc(-1 * var(--full-page-grid-margin));
+      width: calc(100% + var(--full-page-grid-margin));
+      min-width: calc(100% + var(--full-page-grid-margin));
+    }
+  }
+
+  /* Mobile: media gallery should span full width and contain overflow for carousel */
+  @media screen and (max-width: 749px) {
+    .product-details .group-block-content > media-gallery,
+    .product-details .group-block-content > div:has(> .product-media-gallery__placeholder-image) {
+      width: calc(100% + 2 * var(--full-page-grid-margin));
+      margin-inline: calc(-1 * var(--full-page-grid-margin));
+      overflow: hidden;
     }
   }
 {% endstylesheet %}
@@ -131,6 +246,12 @@
     },
     {
       "type": "breadcrumb"
+    },
+    {
+      "type": "_product-media-gallery"
+    },
+    {
+      "type": "_featured-product-information-carousel"
     }
   ],
   "tag": null,
@@ -488,6 +609,10 @@
             "alignment": "left"
           }
         },
+        "media_gallery": {
+          "type": "_product-media-gallery",
+          "settings": {}
+        },
         "variant_picker_R3rGDr": {
           "type": "variant-picker",
           "settings": {
@@ -703,6 +828,7 @@
         "heading_m7KmQQ",
         "text_GMQR8L",
         "price_a7krng",
+        "media_gallery",
         "variant_picker_R3rGDr",
         "buy_buttons_eYQEYi",
         "group_Q4eVWb",

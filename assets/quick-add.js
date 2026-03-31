@@ -122,7 +122,7 @@ export class QuickAddComponent extends Component {
     if (!(dialogComponent instanceof QuickAddDialog)) return;
 
     const productDetails = dialogComponent.querySelector('.product-details');
-    const productMedia = dialogComponent.querySelector('.product-information__media');
+    const productMedia = dialogComponent.querySelector('media-gallery');
     productDetails?.scrollTo({ top: 0, behavior: 'instant' });
     productMedia?.scrollTo({ top: 0, behavior: 'instant' });
   }
