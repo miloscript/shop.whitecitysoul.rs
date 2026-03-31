@@ -169,13 +169,22 @@
     }
   }
 
-  /* Mobile: media gallery should span full width and contain overflow for carousel */
+  /* Mobile: media gallery width and centering */
   @media screen and (max-width: 749px) {
     .product-details .group-block-content > media-gallery,
     .product-details .group-block-content > div:has(> .product-media-gallery__placeholder-image) {
+      overflow: hidden;
+    }
+
+    .product-details .group-block-content > media-gallery.media-gallery--mobile-edge-to-edge,
+    .product-details .group-block-content > div:has(> .product-media-gallery__placeholder-image) {
       width: calc(100% + 2 * var(--full-page-grid-margin));
       margin-inline: calc(-1 * var(--full-page-grid-margin));
-      overflow: hidden;
+    }
+
+    .product-details .group-block-content > media-gallery:not(.media-gallery--mobile-edge-to-edge) {
+      width: var(--mobile-gallery-max-width, 100%);
+      margin-inline: auto;
     }
   }
 {% endstylesheet %}
