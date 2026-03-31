@@ -38,6 +38,7 @@
     data-current-variant-id="{{ current_variant.id }}"
     data-initial-quantity="{{ initial_quantity }}"
     data-default-variant-title="{{ 'products.product.default_title' | t }}"
+    data-mobile-scroll-threshold="{{ section.settings.mobile_scroll_threshold }}"
   >
     <div
       class="sticky-add-to-cart__bar color-{{ settings.popover_color_scheme }}"
@@ -436,6 +437,17 @@
       "id": "enable_sticky_add_to_cart",
       "label": "t:settings.enable_sticky_add_to_cart",
       "default": true
+    },
+    {
+      "type": "range",
+      "id": "mobile_scroll_threshold",
+      "label": "t:settings.mobile_scroll_threshold",
+      "min": 0,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 150,
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
     },
     {
       "type": "color_scheme",

@@ -261,6 +261,7 @@
     "blog_posts_carousel": "Blog posts: Carousel",
     "blog_posts_editorial": "Blog posts: Editorial",
     "borders": "Borders",
+    "breadcrumb": "Breadcrumb",
     "button": "Button",
     "buttons": "Buttons",
     "caption": "Caption",
@@ -1104,7 +1105,9 @@
     "row": "Row",
     "scroll_speed": "Time to next announcement",
     "search": "Search",
+    "mobile_scroll_threshold": "Mobile scroll threshold",
     "search_icon": "Search icon",
+    "separator": "Separator",
     // Setting for search bar placement in header
     "search_position": "Position",
     "search_row": "Row",

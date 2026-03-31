@@ -68,9 +68,16 @@ class StickyAddToCartComponent extends Component {
   /** @type {boolean} */
   #hiddenByBottom = false;
 
+  /** @type {MediaQueryList} */
+  #mobileQuery = window.matchMedia('(max-width: 749px)');
+
+  /** @type {number} */
+  #mobileScrollThreshold = 150;
+
   connectedCallback() {
     super.connectedCallback();
 
+    this.#mobileScrollThreshold = parseInt(this.dataset.mobileScrollThreshold || '150') || 150;
     this.#setupIntersectionObserver();
 
     const { signal } = this.#abortController;
@@ -81,6 +88,8 @@ class StickyAddToCartComponent extends Component {
     document.addEventListener(ThemeEvents.cartUpdate, this.#handleCartAddComplete, { signal });
     document.addEventListener(ThemeEvents.cartError, this.#handleCartAddComplete, { signal });
     document.addEventListener(ThemeEvents.quantitySelectorUpdate, this.#handleQuantityUpdate, { signal });
+
+    window.addEventListener('scroll', this.#handleMobileScroll, { signal, passive: true });
 
     this.#getInitialQuantity();
   }
@@ -109,20 +118,18 @@ class StickyAddToCartComponent extends Component {
     const footer = document.querySelector('footer') ?? document.querySelector('[class*="footer-group"]');
     if (!footer) return;
 
-    // Observer for buy buttons visibility
+    // Observer for buy buttons visibility (desktop behavior)
     this.#buyButtonsIntersectionObserver = new IntersectionObserver((entries) => {
+      if (this.#mobileQuery.matches) return;
+
       const [entry] = entries;
       if (!entry) return;
 
-      // Only show sticky bar if buy buttons have been scrolled past (above viewport)
       if (!entry.isIntersecting && !this.#isStuck) {
-        // Check if the element is above the viewport (scrolled past) or below (not yet reached)
         const rect = entry.target.getBoundingClientRect();
         if (rect.bottom < 0 || rect.top < 0) {
-          // Element is above viewport - show sticky bar
           this.#showStickyBar();
         }
-        // If rect.top >= 0, element is below viewport - don't show sticky bar yet
       } else if (entry.isIntersecting && this.#isStuck) {
         this.#hiddenByBottom = false;
         this.#hideStickyBar();
@@ -139,12 +146,17 @@ class StickyAddToCartComponent extends Component {
           this.#hiddenByBottom = true;
           this.#hideStickyBar();
         } else if (!entry.isIntersecting && this.#hiddenByBottom) {
-          // Footer out of view - check if we should show sticky bar again
-          const rect = buyButtonsBlock.getBoundingClientRect();
-          // Only show if buy buttons are above the viewport (scrolled past)
-          if (rect.bottom < 0 || rect.top < 0) {
-            this.#hiddenByBottom = false;
-            this.#showStickyBar();
+          if (this.#mobileQuery.matches) {
+            if (window.scrollY >= this.#mobileScrollThreshold) {
+              this.#hiddenByBottom = false;
+              this.#showStickyBar();
+            }
+          } else {
+            const rect = buyButtonsBlock.getBoundingClientRect();
+            if (rect.bottom < 0 || rect.top < 0) {
+              this.#hiddenByBottom = false;
+              this.#showStickyBar();
+            }
           }
         }
       },
@@ -157,6 +169,22 @@ class StickyAddToCartComponent extends Component {
     this.#mainBottomObserver.observe(footer);
     this.#targetAddToCartButton = productForm.querySelector('[ref="addToCartButton"]');
   }
+
+  /**
+   * Handles scroll events for mobile sticky bar visibility
+   */
+  #handleMobileScroll = () => {
+    if (!this.#mobileQuery.matches) return;
+    if (this.#hiddenByBottom) return;
+
+    const scrollY = window.scrollY;
+
+    if (scrollY >= this.#mobileScrollThreshold && !this.#isStuck) {
+      this.#showStickyBar();
+    } else if (scrollY < this.#mobileScrollThreshold && this.#isStuck) {
+      this.#hideStickyBar();
+    }
+  };
 
   // Public action handlers
   /**
