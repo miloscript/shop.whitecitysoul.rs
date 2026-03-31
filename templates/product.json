@@ -270,7 +270,6 @@
         "gap": 48,
         "enable_sticky_add_to_cart": true,
         "mobile_scroll_threshold": 100,
-        "show_header_above_media_mobile": true,
         "color_scheme": "",
         "padding-block-start": 0,
         "padding-block-end": 0

@@ -10,9 +10,6 @@
   @param {string} media_gallery - Captured HTML for the product media gallery block
   @param {string} product_details - Captured HTML for the product details block
   @param {string} additional_blocks - Captured HTML for additional section blocks
-  @param {product} [product_resource] - The product object for mobile header rendering
-  @param {boolean} [show_header_above_media_mobile] - Show breadcrumb/title/price above media on mobile
-
   @example
   {% capture media_gallery %}
     {% content_for 'block', type: '_product-media-gallery', id: 'media-gallery', closest.product: product %}
@@ -32,9 +29,7 @@
     settings: section.settings,
     media_gallery: media_gallery,
     product_details: product_details,
-    additional_blocks: additional_blocks,
-    product_resource: product,
-    show_header_above_media_mobile: section.settings.show_header_above_media_mobile
+    additional_blocks: additional_blocks
   %}
 {% enddoc %}
 
@@ -86,42 +81,6 @@
   style="{% render 'spacing-style', settings: settings %} --gap: {{ settings.gap }}px;"
   data-testid="product-information"
 >
-  {% if show_header_above_media_mobile and product_resource %}
-    {%- assign separator = '/' -%}
-    <div class="product-mobile-header">
-      <nav class="breadcrumb" aria-label="{{ 'accessibility.breadcrumb' | t }}">
-        <ol class="breadcrumb__list" itemscope itemtype="https://schema.org/BreadcrumbList">
-          <li class="breadcrumb__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="{{ routes.root_url }}" itemprop="item"><span itemprop="name">{{ 'breadcrumb.home' | t }}</span></a>
-            <meta itemprop="position" content="1">
-          </li>
-          {%- if collection -%}
-            <li class="breadcrumb__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-              <span class="breadcrumb__separator" aria-hidden="true">{{ separator }}</span>
-              <a href="{{ collection.url }}" itemprop="item"><span itemprop="name">{{ collection.title }}</span></a>
-              <meta itemprop="position" content="2">
-            </li>
-            <li class="breadcrumb__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
-              <span class="breadcrumb__separator" aria-hidden="true">{{ separator }}</span>
-              <span itemprop="name">{{ product_resource.title }}</span>
-              <meta itemprop="position" content="3">
-            </li>
-          {%- else -%}
-            <li class="breadcrumb__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
-              <span class="breadcrumb__separator" aria-hidden="true">{{ separator }}</span>
-              <span itemprop="name">{{ product_resource.title }}</span>
-              <meta itemprop="position" content="2">
-            </li>
-          {%- endif -%}
-        </ol>
-      </nav>
-      <h1 class="product-mobile-header__title">{{ product_resource.title }}</h1>
-      <div class="product-mobile-header__price">
-        {% render 'price', product_resource: product_resource, show_sale_price_first: true %}
-      </div>
-    </div>
-  {% endif %}
-
   {% if settings.desktop_media_position == 'left' and product_has_media and request.page_type == 'product' %}
     {% assign product_href = '#ProductInformation-' | append: section_id %}
     {% render 'skip-to-content-link', href: product_href, text: 'accessibility.skip_to_product_info' %}
@@ -355,40 +314,4 @@
     --sticky-header-offset: var(--header-height);
   }
 
-  /* Mobile header: breadcrumb + title + price above media */
-  .product-mobile-header {
-    display: none;
-    grid-column: 2;
-    padding-bottom: var(--gap-md);
-  }
-
-  @media screen and (max-width: 749px) {
-    .product-mobile-header {
-      display: block;
-    }
-
-    /* Hide the original breadcrumb, title and price blocks inside details on mobile */
-    .product-information:has(.product-mobile-header) .product-details .breadcrumb,
-    .product-information:has(.product-mobile-header) .product-details product-price:first-of-type {
-      display: none;
-    }
-
-    /* Hide the first text-block (product title) inside details on mobile */
-    .product-information:has(.product-mobile-header) .product-details .group-block-content > .text-block:first-child,
-    .product-information:has(.product-mobile-header) .product-details .group-block-content > nav.breadcrumb + .text-block {
-      display: none;
-    }
-  }
-
-  .product-mobile-header__title {
-    font-size: var(--font-heading-h3--size, 1.5rem);
-    font-family: var(--font-primary--family);
-    font-weight: var(--font-heading--weight);
-    line-height: normal;
-    margin: 0.25em 0;
-  }
-
-  .product-mobile-header__price {
-    font-size: var(--font-paragraph--size);
-  }
 {% endstylesheet %}

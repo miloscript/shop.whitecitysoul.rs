@@ -174,9 +174,7 @@
   settings: section.settings,
   media_gallery: media_gallery,
   product_details: product_details,
-  additional_blocks: additional_blocks,
-  product_resource: closest.product,
-  show_header_above_media_mobile: section.settings.show_header_above_media_mobile
+  additional_blocks: additional_blocks
 %}
 
 {% stylesheet %}
@@ -450,12 +448,6 @@
       "unit": "px",
       "default": 150,
       "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_header_above_media_mobile",
-      "label": "t:settings.show_header_above_media_mobile",
-      "default": true
     },
     {
       "type": "color_scheme",

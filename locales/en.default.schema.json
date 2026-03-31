@@ -1106,7 +1106,6 @@
     "scroll_speed": "Time to next announcement",
     "search": "Search",
     "mobile_scroll_threshold": "Mobile scroll threshold",
-    "show_header_above_media_mobile": "Show title and price above media on mobile",
     "search_icon": "Search icon",
     "separator": "Separator",
     // Setting for search bar placement in header
