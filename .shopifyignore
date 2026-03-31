@@ -13,3 +13,4 @@
 #   /(templates|sections)/.*\.json/
 
 docs/*
+.claude/*

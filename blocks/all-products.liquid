@@ -8,6 +8,7 @@
 
 {% liquid
   assign id = block.id | replace: '_', '' | downcase
+  assign sort_style = block.settings.sort_display_style
 %}
 
 {% style %}
@@ -41,28 +42,138 @@
 >
   {%- liquid
     assign show_any_sort = false
-    if block.settings.show_sort_price_asc or block.settings.show_sort_price_desc or block.settings.show_sort_name_asc or block.settings.show_sort_name_desc
+    if block.settings.show_sort_recommended or block.settings.show_sort_price_asc or block.settings.show_sort_price_desc or block.settings.show_sort_name_asc or block.settings.show_sort_name_desc
       assign show_any_sort = true
     endif
   -%}
 
   {% if show_any_sort %}
-    <div class="all-products__sort">
-      <select class="all-products__sort-select" data-all-products-sort>
-        {% if block.settings.show_sort_price_asc %}
-          <option value="price-asc">{{- 'blocks.all_products.sort.price_asc' | t -}}</option>
-        {% endif %}
-        {% if block.settings.show_sort_price_desc %}
-          <option value="price-desc">{{- 'blocks.all_products.sort.price_desc' | t -}}</option>
-        {% endif %}
-        {% if block.settings.show_sort_name_asc %}
-          <option value="name-asc">{{- 'blocks.all_products.sort.name_asc' | t -}}</option>
-        {% endif %}
-        {% if block.settings.show_sort_name_desc %}
-          <option value="name-desc">{{- 'blocks.all_products.sort.name_desc' | t -}}</option>
-        {% endif %}
-      </select>
-    </div>
+    {% if sort_style == 'select' %}
+      <div class="all-products__sort">
+        <select class="all-products__sort-select" data-all-products-sort>
+          {% if block.settings.show_sort_recommended %}
+            <option value="recommended">{{- 'blocks.all_products.sort.recommended' | t -}}</option>
+          {% endif %}
+          {% if block.settings.show_sort_price_asc %}
+            <option value="price-asc">{{- 'blocks.all_products.sort.price_asc' | t -}}</option>
+          {% endif %}
+          {% if block.settings.show_sort_price_desc %}
+            <option value="price-desc">{{- 'blocks.all_products.sort.price_desc' | t -}}</option>
+          {% endif %}
+          {% if block.settings.show_sort_name_asc %}
+            <option value="name-asc">{{- 'blocks.all_products.sort.name_asc' | t -}}</option>
+          {% endif %}
+          {% if block.settings.show_sort_name_desc %}
+            <option value="name-desc">{{- 'blocks.all_products.sort.name_desc' | t -}}</option>
+          {% endif %}
+        </select>
+      </div>
+    {% else %}
+      <div class="all-products__sort">
+        <details class="all-products__sort-details" data-all-products-sort-details>
+          <summary class="all-products__sort-summary">
+            <span class="all-products__sort-label" data-all-products-sort-label>
+              {%- if block.settings.default_sort == 'recommended' -%}
+                {{- 'blocks.all_products.sort.recommended' | t -}}
+              {%- elsif block.settings.default_sort == 'price-asc' -%}
+                {{- 'blocks.all_products.sort.price_asc' | t -}}
+              {%- elsif block.settings.default_sort == 'price-desc' -%}
+                {{- 'blocks.all_products.sort.price_desc' | t -}}
+              {%- elsif block.settings.default_sort == 'name-asc' -%}
+                {{- 'blocks.all_products.sort.name_asc' | t -}}
+              {%- elsif block.settings.default_sort == 'name-desc' -%}
+                {{- 'blocks.all_products.sort.name_desc' | t -}}
+              {%- endif -%}
+            </span>
+            <span class="all-products__sort-caret">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          </summary>
+          <div class="all-products__sort-options">
+            {% if block.settings.show_sort_recommended %}
+              <label class="all-products__sort-option">
+                <input
+                  type="radio"
+                  name="all-products-sort-{{ id }}"
+                  value="recommended"
+                  class="all-products__sort-input"
+                  data-all-products-sort
+                  {% if block.settings.default_sort == 'recommended' %}checked{% endif %}
+                >
+                <span class="all-products__sort-checkmark">
+                  {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                </span>
+                <span class="all-products__sort-option-label">{{- 'blocks.all_products.sort.recommended' | t -}}</span>
+              </label>
+            {% endif %}
+            {% if block.settings.show_sort_price_asc %}
+              <label class="all-products__sort-option">
+                <input
+                  type="radio"
+                  name="all-products-sort-{{ id }}"
+                  value="price-asc"
+                  class="all-products__sort-input"
+                  data-all-products-sort
+                  {% if block.settings.default_sort == 'price-asc' %}checked{% endif %}
+                >
+                <span class="all-products__sort-checkmark">
+                  {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                </span>
+                <span class="all-products__sort-option-label">{{- 'blocks.all_products.sort.price_asc' | t -}}</span>
+              </label>
+            {% endif %}
+            {% if block.settings.show_sort_price_desc %}
+              <label class="all-products__sort-option">
+                <input
+                  type="radio"
+                  name="all-products-sort-{{ id }}"
+                  value="price-desc"
+                  class="all-products__sort-input"
+                  data-all-products-sort
+                  {% if block.settings.default_sort == 'price-desc' %}checked{% endif %}
+                >
+                <span class="all-products__sort-checkmark">
+                  {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                </span>
+                <span class="all-products__sort-option-label">{{- 'blocks.all_products.sort.price_desc' | t -}}</span>
+              </label>
+            {% endif %}
+            {% if block.settings.show_sort_name_asc %}
+              <label class="all-products__sort-option">
+                <input
+                  type="radio"
+                  name="all-products-sort-{{ id }}"
+                  value="name-asc"
+                  class="all-products__sort-input"
+                  data-all-products-sort
+                  {% if block.settings.default_sort == 'name-asc' %}checked{% endif %}
+                >
+                <span class="all-products__sort-checkmark">
+                  {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                </span>
+                <span class="all-products__sort-option-label">{{- 'blocks.all_products.sort.name_asc' | t -}}</span>
+              </label>
+            {% endif %}
+            {% if block.settings.show_sort_name_desc %}
+              <label class="all-products__sort-option">
+                <input
+                  type="radio"
+                  name="all-products-sort-{{ id }}"
+                  value="name-desc"
+                  class="all-products__sort-input"
+                  data-all-products-sort
+                  {% if block.settings.default_sort == 'name-desc' %}checked{% endif %}
+                >
+                <span class="all-products__sort-checkmark">
+                  {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                </span>
+                <span class="all-products__sort-option-label">{{- 'blocks.all_products.sort.name_desc' | t -}}</span>
+              </label>
+            {% endif %}
+          </div>
+        </details>
+      </div>
+    {% endif %}
   {% endif %}
 
   <div class="all-products__grid all-products__grid-{{ id }}" data-all-products-grid>
@@ -123,6 +234,101 @@
     min-width: 180px;
   }
 
+  .all-products__sort-details {
+    position: relative;
+    font-size: var(--sort-font-size);
+  }
+
+  .all-products__sort-summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--sort-border-color);
+    background-color: var(--sort-bg-color);
+    border-radius: var(--sort-border-radius);
+    cursor: pointer;
+    list-style: none;
+    min-width: 180px;
+    user-select: none;
+  }
+
+  .all-products__sort-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .all-products__sort-caret {
+    display: flex;
+    margin-inline-start: auto;
+    transition: transform 0.2s ease;
+  }
+
+  .all-products__sort-caret svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .all-products__sort-details[open] .all-products__sort-caret {
+    transform: rotate(180deg);
+  }
+
+  .all-products__sort-options {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--sort-bg-color, #fff);
+    border: 1px solid var(--sort-border-color);
+    border-radius: var(--sort-border-radius);
+    min-width: 100%;
+    width: max-content;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+    padding: 4px;
+  }
+
+  .all-products__sort-option {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 6px;
+    align-items: center;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: calc(var(--sort-border-radius) / 2);
+  }
+
+  .all-products__sort-option:hover {
+    background-color: rgb(0 0 0 / 0.05);
+  }
+
+  .all-products__sort-input {
+    display: none;
+  }
+
+  .all-products__sort-checkmark {
+    visibility: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  .all-products__sort-checkmark svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .all-products__sort-input:checked ~ .all-products__sort-checkmark {
+    visibility: visible;
+  }
+
+  .all-products__sort-input:checked ~ .all-products__sort-option-label {
+    font-weight: 500;
+  }
+
+  .all-products__sort-option-label {
+    pointer-events: none;
+  }
+
   .all-products__grid {
     display: grid;
   }
@@ -144,28 +350,59 @@
     class AllProducts{{ id }} extends HTMLElement {
       connectedCallback() {
         this._grid = this.querySelector('[data-all-products-grid]');
-        this._items = Array.from(this._grid.querySelectorAll('.all-products__card')).map(function (el) {
+        this._items = Array.from(this._grid.querySelectorAll('.all-products__card')).map(function (el, index) {
           return {
             el: el,
             price: parseInt(el.dataset.price, 10) || 0,
-            name: el.dataset.name || ''
+            name: el.dataset.name || '',
+            originalIndex: index
           };
         });
-        this._select = this.querySelector('[data-all-products-sort]');
+
         var self = this;
         var defaultSort = this.dataset.defaultSort;
-        if (this._select) {
+
+        var select = this.querySelector('select[data-all-products-sort]');
+        if (select) {
           if (defaultSort) {
-            this._select.value = defaultSort;
+            select.value = defaultSort;
             this.sort(defaultSort);
           }
-          this._select.addEventListener('change', function () { self.sort(self._select.value); });
+          select.addEventListener('change', function () { self.sort(select.value); });
+          return;
+        }
+
+        var details = this.querySelector('[data-all-products-sort-details]');
+        if (details) {
+          var radios = this.querySelectorAll('input[data-all-products-sort]');
+          var label = this.querySelector('[data-all-products-sort-label]');
+
+          if (defaultSort) {
+            this.sort(defaultSort);
+          }
+
+          radios.forEach(function (radio) {
+            radio.addEventListener('change', function () {
+              self.sort(radio.value);
+              if (label) {
+                label.textContent = radio.closest('.all-products__sort-option').querySelector('.all-products__sort-option-label').textContent;
+              }
+              details.removeAttribute('open');
+            });
+          });
+
+          document.addEventListener('click', function (e) {
+            if (!details.contains(e.target)) {
+              details.removeAttribute('open');
+            }
+          });
         }
       }
 
       sort(key) {
         var sorted = this._items.slice();
-        if (key === 'price-asc') sorted.sort(function (a, b) { return a.price - b.price; });
+        if (key === 'recommended') sorted.sort(function (a, b) { return a.originalIndex - b.originalIndex; });
+        else if (key === 'price-asc') sorted.sort(function (a, b) { return a.price - b.price; });
         else if (key === 'price-desc') sorted.sort(function (a, b) { return b.price - a.price; });
         else if (key === 'name-asc') sorted.sort(function (a, b) { return a.name.localeCompare(b.name); });
         else if (key === 'name-desc') sorted.sort(function (a, b) { return b.name.localeCompare(a.name); });
@@ -204,15 +441,32 @@
     },
     {
       "type": "select",
+      "id": "sort_display_style",
+      "label": "t:settings.sort_display_style",
+      "options": [
+        { "value": "select", "label": "t:options.sort_style_select" },
+        { "value": "icons", "label": "t:options.sort_style_icons" }
+      ],
+      "default": "select"
+    },
+    {
+      "type": "select",
       "id": "default_sort",
       "label": "t:settings.default_sort",
       "options": [
+        { "value": "recommended", "label": "t:options.sort_recommended" },
         { "value": "price-asc", "label": "t:options.sort_price_asc" },
         { "value": "price-desc", "label": "t:options.sort_price_desc" },
         { "value": "name-asc", "label": "t:options.sort_name_asc" },
         { "value": "name-desc", "label": "t:options.sort_name_desc" }
       ],
-      "default": "price-asc"
+      "default": "recommended"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_recommended",
+      "label": "t:settings.show_sort_recommended",
+      "default": true
     },
     {
       "type": "checkbox",
