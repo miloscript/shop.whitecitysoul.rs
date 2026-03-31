@@ -351,7 +351,7 @@
         media-gallery--mobile-edge-to-edge
       {% endif %}
     "
-    style="{% render 'spacing-style', settings: block_settings %} --thumbnail-width: {{ block_settings.thumbnail_width }}px; --media-radius: {{ block_settings.media_radius }}px;{% if block_settings.icons_style contains 'large' %} --slideshow-icon-padding: 0px;{% endif %}--image-gap: {{ block_settings.image_gap }}px;{% unless block_settings.aspect_ratio == 'adapt' %} --gallery-aspect-ratio: {{ block_settings.aspect_ratio }};{% endunless %} --mobile-gallery-max-width: {{ block_settings.mobile_max_width | default: 100 }}%;"
+    style="{% render 'spacing-style', settings: block_settings %} --thumbnail-width: {{ block_settings.thumbnail_width }}px; --media-radius: {{ block_settings.media_radius }}px;{% if block_settings.icons_style contains 'large' %} --slideshow-icon-padding: 0px;{% endif %}--image-gap: {{ block_settings.image_gap }}px;{% unless block_settings.aspect_ratio == 'adapt' %} --gallery-aspect-ratio: {{ block_settings.aspect_ratio }};{% endunless %} --mobile-gallery-max-width: {{ block_settings.mobile_max_width | default: 100 }}%; --desktop-padding-top: {{ block_settings.desktop_padding_top | default: 0 }}px; --desktop-padding-bottom: {{ block_settings.desktop_padding_bottom | default: 0 }}px; --desktop-padding-left: {{ block_settings.desktop_padding_left | default: 0 }}px; --desktop-padding-right: {{ block_settings.desktop_padding_right | default: 0 }}px;"
     data-presentation="{{ media_presentation }}"
     {{ block_shopify_attributes }}
   >
@@ -641,6 +641,15 @@
 {% endif %}
 
 {% stylesheet %}
+  @media screen and (min-width: 750px) {
+    media-gallery.spacing-style {
+      padding-block: calc(var(--padding-block-start, 0px) + var(--desktop-padding-top, 0px))
+                     calc(var(--padding-block-end, 0px) + var(--desktop-padding-bottom, 0px));
+      padding-inline: calc(var(--padding-inline-start, 0px) + var(--desktop-padding-left, 0px))
+                      calc(var(--padding-inline-end, 0px) + var(--desktop-padding-right, 0px));
+    }
+  }
+
   .dialog-zoomed-gallery__dialog {
     background-color: var(--color-background);
   }
