@@ -107,7 +107,7 @@
       "name": "t:names.utilities",
       "settings": {
         "section_width": "page-width",
-        "gap": 0,
+        "gap": 8,
         "divider_thickness": 0,
         "color_scheme": "",
         "padding-block-start": 12,
