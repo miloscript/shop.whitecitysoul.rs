@@ -9,8 +9,8 @@
  */
 {
   "current": {
-    "logo": "shopify://shop_images/wss-logo-black-text_1ed2ea19-c4f7-49c5-8215-427c43587c57.svg",
-    "logo_inverse": "shopify://shop_images/wss-logo-white-text_e83c772d-f1ec-4f9d-ba66-7fa74f7cea61.svg",
+    "logo": "shopify://shop_images/logo-inverse.svg",
+    "logo_inverse": "shopify://shop_images/logo.svg",
     "logo_height": 28,
     "logo_height_mobile": 28,
     "favicon": "shopify://shop_images/wss-logo-white.svg",

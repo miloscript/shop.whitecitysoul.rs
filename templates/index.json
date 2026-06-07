@@ -52,7 +52,9 @@
           "name": "t:names.all_products",
           "settings": {
             "collection": "frontpage",
-            "default_sort": "price-asc",
+            "sort_display_style": "icons",
+            "default_sort": "recommended",
+            "show_sort_recommended": true,
             "show_sort_price_asc": true,
             "show_sort_price_desc": true,
             "show_sort_name_asc": true,
